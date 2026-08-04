@@ -1,7 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
-using Newtonsoft.Json.Serialization;
 using System.Text;
 using System.Text.Encodings.Web;
 using AlbumViewerAspNetCore;
@@ -18,7 +17,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
-using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,20 +30,8 @@ var environment = builder.Environment;
 
 services.AddDbContext<AlbumViewerContext>(builder =>
 {
-    string useSqLite = configuration["Data:useSqLite"];
-    if (useSqLite != "true")
-    {
-        var connStr = configuration["Data:SqlServerConnectionString"];
-        builder.UseSqlServer(connStr, opt => opt.EnableRetryOnFailure());
-    }
-    else
-    {
-        // Note this path has to have full  access for the Web user in order
-        // to create the DB and write to it.
-        var connStr = "Data Source=" +
-                      Path.Combine(environment.ContentRootPath, "AlbumViewerData.sqlite");
-        builder.UseSqlite(connStr);
-    }
+    var connStr = configuration.GetConnectionString("AlbumViewer");
+    builder.UseNpgsql(connStr);
 });
 
 
@@ -122,44 +108,15 @@ services.AddScoped<AccountRepository>();
 services.AddScoped<ApiExceptionFilter>();
 
 services.AddControllers()
-    // Use classic JSON
-    .AddNewtonsoftJson(opt =>
+    .AddJsonOptions(opt =>
     {
-        var resolver = opt.SerializerSettings.ContractResolver;
-        if (resolver != null)
-        {
-            var res = resolver as DefaultContractResolver;
-            res.NamingStrategy = null;
-        }
-
+        opt.JsonSerializerOptions.PropertyNamingPolicy = null; // keep PascalCase
         if (environment.IsDevelopment())
-            opt.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+            opt.JsonSerializerOptions.WriteIndented = true;
     });
 
 
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = "West Wind Album Viewer",
-        Description = "An ASP.NET Core Sample API SPA application letting you browse and edit music albums and artists.",
-        //TermsOfService = new Uri("https://example.com/terms"),
-        //Contact = new OpenApiContact
-        //{
-        //    Name = "Example Contact",
-        //    Url = new Uri("https://example.com/contact")
-        //},
-        //License = new OpenApiLicense
-        //{
-        //    Name = "Example License",
-        //    Url = new Uri("https://example.com/license")
-        //}
-    });
-
-    var filePath = Path.Combine(System.AppContext.BaseDirectory, "AlbumViewerNetCore.xml");
-    options.IncludeXmlComments(filePath);
-});
+builder.Services.AddOpenApi();
 
 //
 // *** BUILD THE APP
@@ -229,24 +186,6 @@ app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
-// check Swagger authentication
-app.Use(async (context, next) =>
-{
-    var path = context.Request.Path;
-    if (path.Value.Contains("/swagger/", StringComparison.OrdinalIgnoreCase))
-    {
-        if (!context.User.Identity.IsAuthenticated)
-        {
-            //context.Response.StatusCode = 401;
-            //await context.Response.WriteAsync("Unauthorized");
-            context.Response.Redirect("/login");
-            return;
-        }
-    }
-
-    await next();
-});
-
 // don't use the new simpler syntax as it doesn't terminate
 // and always fires the catch-all route below
 // if you don't have a catch-all route then this syntax is preferrable
@@ -263,8 +202,7 @@ app.UseEndpoints(app =>
 // for this app make it public
 if (true)  // (app.Environment.IsDevelopment()) 
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
 }
 
 // catch-all handler for HTML5 client routes - serve index.html
@@ -296,8 +234,7 @@ Console.ResetColor();
 Console.WriteLine("\r\nPlatform: " + System.Runtime.InteropServices.RuntimeInformation.OSDescription);
 Console.WriteLine(".NET Version: " + System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
 Console.WriteLine("Hosting Environment: " + environment.EnvironmentName);
-string useSqLite = configuration["Data:useSqLite"];
-Console.WriteLine(useSqLite == "true" ? "SqLite" : "Sql Server");
+Console.WriteLine("Database: " + configuration.GetConnectionString("AlbumViewer"));
 
 
 

@@ -12,40 +12,38 @@ namespace AlbumViewerBusiness
     /// wwwroot/data/albums.js file which contains all the data
     /// in a single graph.
     /// </summary>
-    public  class AlbumViewerDataImporter
+    public class AlbumViewerDataImporter
     {
         public static bool EnsureAlbumData(AlbumViewerContext context, string jsonDataFilePath)
         {
-            bool hasData = false;
-            try
-            {
-                hasData = context.Albums.Any();
-            }
-            catch
-            {
-                context.Database.EnsureCreated(); // just create the schema - no migrations
-                hasData = context.Albums.Any();
-            }
+            // EnsureCreated is idempotent — creates schema if it doesn't exist, no-op if it does.
+            // This avoids using exception handling as control flow to detect a missing schema.
+            bool created = context.Database.EnsureCreated();
+            if (created)
+                Console.WriteLine("Database schema created.");
 
-
-            if (!hasData)
+            if (!context.Albums.Any())
             {
+                Console.WriteLine("No album data found — importing from seed file...");
                 string json = System.IO.File.ReadAllText(jsonDataFilePath);
-                return ImportFromJson(context, json) > 0;
+                int count = ImportFromJson(context, json);
+                Console.WriteLine($"Seed import complete: {count} albums imported.");
+                return count > 0;
             }
 
-
+            Console.WriteLine("Album data already present — skipping seed import.");
             return true;
         }
 
         /// <summary>
-        /// Imports data from json
+        /// Imports albums, artists and tracks from a JSON array.
+        /// Returns the number of albums successfully saved.
         /// </summary>
-        /// <param name="json"></param>
-        /// <returns></returns>
         public static int ImportFromJson(AlbumViewerContext context, string json)
         {
             var albums = JsonConvert.DeserializeObject<Album[]>(json);
+            int saved = 0;
+            int failed = 0;
 
             foreach (var album in albums)
             {
@@ -78,10 +76,12 @@ namespace AlbumViewerBusiness
                 try
                 {
                     context.SaveChanges();
+                    saved++;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Error adding: " + album.ArtistId);
+                    failed++;
+                    Console.WriteLine($"Error saving album '{album.Title}': {ex.Message}");
                 }
             }
 
@@ -89,12 +89,15 @@ namespace AlbumViewerBusiness
             {
                 Username = "test",
                 Password = "test",
-                Fullname = "Test User",                               
+                Fullname = "Test User",
             };
             context.Users.Add(user);
             context.SaveChanges();
 
-            return 1;
+            if (failed > 0)
+                Console.WriteLine($"Import finished with {failed} failure(s).");
+
+            return saved;
         }
     }
 }
