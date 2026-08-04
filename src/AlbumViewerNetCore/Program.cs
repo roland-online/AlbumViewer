@@ -146,16 +146,8 @@ var app = builder.Build();
 
 
 // Get any injected items
-var albumContext = app.Services.CreateScope().ServiceProvider.GetService<AlbumViewerContext>();
-
-    
-
-//Log.Logger = new LoggerConfiguration()
-//        .WriteTo.RollingFile(pathFormat: "logs\\log-{Date}.log")
-//        .CreateLogger();
-
-//loggerFactory
-//    .AddSerilog();
+using var scope = app.Services.CreateScope();
+var albumContext = scope.ServiceProvider.GetService<AlbumViewerContext>();
 
 
 if (environment.IsDevelopment())
@@ -171,9 +163,15 @@ else
 //app.UseHttpsRedirection();
 
 
+// Strip Referer on cross-origin requests so third-party image CDNs (e.g. Amazon) don't hotlink-block
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Append("Referrer-Policy", "no-referrer");
+    await next();
+});
+
 app.UseStatusCodePages();
-app.UseDefaultFiles(); // so index.html is not required
-app.UseStaticFiles();
+app.MapStaticAssets(); // serves Angular wwwroot with compression + cache headers
 
 app.UseRouting();
 
@@ -182,36 +180,12 @@ app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
-// UseEndpoints is required here because app.Run() below is a terminal middleware
-// that prevents WebApplication's implicit endpoint execution. ASP0014 does not apply.
-#pragma warning disable ASP0014
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
-#pragma warning restore ASP0014
+app.MapControllers();
 
+app.MapOpenApi();
 
-// for this app make it public
-if (true)  // (app.Environment.IsDevelopment()) 
-{
-    app.MapOpenApi();
-}
-
-// catch-all handler for HTML5 client routes - serve index.html
-app.Run(async context =>
-{
-    var path = context.Request.Path.Value;
-
-    // Make sure Angular output was created in wwwroot
-    // Running Angular in dev mode nukes output folder!
-    // so it could be missing.
-    if (environment.WebRootPath == null)
-        throw new InvalidOperationException("wwwroot folder doesn't exist. Please recompile your Angular Project before accessing index.html. API calls will work fine.");
-
-    context.Response.ContentType = "text/html";
-    await context.Response.SendFileAsync(Path.Combine(environment.WebRootPath, "index.html"));
-});
+// SPA fallback: unmatched routes serve index.html for Angular client-side routing
+app.MapFallbackToFile("index.html");
 
 // Initialize Database if it doesn't exist
 AlbumViewerDataImporter.EnsureAlbumData(albumContext, Path.Combine(environment.ContentRootPath, "albums.js"));
