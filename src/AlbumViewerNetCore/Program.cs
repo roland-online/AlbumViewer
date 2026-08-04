@@ -15,8 +15,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
+using Serilog;
+using Westwind.AspNetCore.LiveReload;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -111,12 +114,30 @@ services.AddControllers()
     .AddJsonOptions(opt =>
     {
         opt.JsonSerializerOptions.PropertyNamingPolicy = null; // keep PascalCase
+        opt.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
         if (environment.IsDevelopment())
             opt.JsonSerializerOptions.WriteIndented = true;
     });
 
 
 builder.Services.AddOpenApi();
+
+builder.Services.AddExceptionHandler<ApiExceptionHandler>();
+
+// LiveReload disabled when Angular is served from wwwroot (pre-built files).
+// Re-enable in Step 3 when running ng serve alongside the API.
+// if (environment.IsDevelopment())
+//     builder.Services.AddLiveReload();
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore.StaticFiles", Serilog.Events.LogEventLevel.Warning)
+    .WriteTo.Console()
+    .WriteTo.File("logs/albumviewer-.log", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(Log.Logger);
 
 //
 // *** BUILD THE APP
@@ -139,37 +160,12 @@ var albumContext = app.Services.CreateScope().ServiceProvider.GetService<AlbumVi
 
 if (environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
-
-    //app.UseDatabaseErrorPage();
+    // app.UseLiveReload(); // re-enable in Step 3 with ng serve
+    // UseDeveloperExceptionPage is auto-added by WebApplication in Development mode
 }
 else
 {
-    app.UseExceptionHandler(errorApp =>
-
-            // Application level exception handler here - this is just a place holder
-            errorApp.Run(async (context) =>
-            {
-                context.Response.StatusCode = 500;
-                context.Response.ContentType = "text/html";
-                await context.Response.WriteAsync("<html><body>\r\n");
-                await context.Response.WriteAsync(
-                        "We're sorry, we encountered an un-expected issue with your application.<br>\r\n");
-
-                            // Capture the exception
-                            var error = context.Features.Get<IExceptionHandlerFeature>();
-                if (error != null)
-                {
-                                // This error would not normally be exposed to the client
-                                await
-                        context.Response.WriteAsync("<br>Error: " +
-                                                    HtmlEncoder.Default.Encode(error.Error.Message) +
-                                                    "<br>\r\n");
-                }
-                await context.Response.WriteAsync("<br><a href=\"/\">Home</a><br>\r\n");
-                await context.Response.WriteAsync("</body></html>\r\n");
-                await context.Response.WriteAsync(new string(' ', 512)); // Padding for IE
-                        }));
+    app.UseExceptionHandler();
 }
 
 //app.UseHttpsRedirection();
@@ -186,17 +182,14 @@ app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
-// don't use the new simpler syntax as it doesn't terminate
-// and always fires the catch-all route below
-// if you don't have a catch-all route then this syntax is preferrable
-// app.MapControllers();
-
-
-// endpoint handler terminates and allows for catch-all middleware below
-app.UseEndpoints(app =>
+// UseEndpoints is required here because app.Run() below is a terminal middleware
+// that prevents WebApplication's implicit endpoint execution. ASP0014 does not apply.
+#pragma warning disable ASP0014
+app.UseEndpoints(endpoints =>
 {
-    app.MapControllers();
+    endpoints.MapControllers();
 });
+#pragma warning restore ASP0014
 
 
 // for this app make it public

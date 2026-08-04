@@ -6,12 +6,12 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using Westwind.BusinessObjects;
+using Westwind.Data.EfCore;
 using Westwind.Utilities;
 
 namespace AlbumViewerBusiness
 {
-    public class AlbumRepository : EntityFrameworkRepository<AlbumViewerContext, Album>
+    public class AlbumRepository : EntityFrameworkBusinessObject<AlbumViewerContext, Album>
     {
         public AlbumRepository(AlbumViewerContext context)
             : base(context)
@@ -33,7 +33,7 @@ namespace AlbumViewerBusiness
         /// </summary>
         /// <param name="objId">Album Id</param>
         /// <returns></returns>
-        public override async Task<Album> Load(object albumId)
+        public override async Task<Album> LoadAsync(object albumId)
         {
             Album album = null;
             try
@@ -103,7 +103,7 @@ namespace AlbumViewerBusiness
             }
             else
             {
-                album = await Load(id);
+                album = await LoadAsync(id);
                 if (album == null)
                     album = Create();
             }

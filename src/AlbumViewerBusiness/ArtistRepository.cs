@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Westwind.BusinessObjects;
+using Westwind.Data.EfCore;
 using Westwind.Utilities;
 
 namespace AlbumViewerBusiness
 {
-public class ArtistRepository : EntityFrameworkRepository<AlbumViewerContext,Artist>
+public class ArtistRepository : EntityFrameworkBusinessObject<AlbumViewerContext,Artist>
 {    
     public ArtistRepository(AlbumViewerContext context)
         : base(context)

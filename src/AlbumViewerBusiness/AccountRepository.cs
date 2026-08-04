@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Westwind.BusinessObjects;
+using Westwind.Data.EfCore;
 
 namespace AlbumViewerBusiness
 {
@@ -12,7 +12,7 @@ namespace AlbumViewerBusiness
     /// Account repository used to validate and manage user accounts
     /// </summary>
 
-    public class AccountRepository : EntityFrameworkRepository<AlbumViewerContext,User>
+    public class AccountRepository : EntityFrameworkBusinessObject<AlbumViewerContext,User>
     {
         public AccountRepository(AlbumViewerContext context)
             : base(context)
