@@ -122,12 +122,13 @@ services.AddControllers()
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddValidation();
+
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 
-// LiveReload disabled when Angular is served from wwwroot (pre-built files).
-// Re-enable in Step 3 when running ng serve alongside the API.
-// if (environment.IsDevelopment())
-//     builder.Services.AddLiveReload();
+// LiveReload: controlled by LiveReload:LiveReloadEnabled in appsettings.Development.json
+// Set to true when running ng serve alongside the API (Step 3.3)
+builder.Services.AddLiveReload();
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -152,7 +153,7 @@ var albumContext = scope.ServiceProvider.GetService<AlbumViewerContext>();
 
 if (environment.IsDevelopment())
 {
-    // app.UseLiveReload(); // re-enable in Step 3 with ng serve
+    app.UseLiveReload(); // active only when LiveReload:LiveReloadEnabled=true in appsettings.Development.json
     // UseDeveloperExceptionPage is auto-added by WebApplication in Development mode
 }
 else
