@@ -131,9 +131,7 @@ builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 builder.Services.AddLiveReload();
 
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", Serilog.Events.LogEventLevel.Warning)
-    .MinimumLevel.Override("Microsoft.AspNetCore.StaticFiles", Serilog.Events.LogEventLevel.Warning)
+    .ReadFrom.Configuration(configuration)  // min-levels driven from appsettings Serilog section
     .WriteTo.Console()
     .WriteTo.File("logs/albumviewer-.log", rollingInterval: RollingInterval.Day)
     .CreateLogger();

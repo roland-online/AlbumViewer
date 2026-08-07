@@ -6,6 +6,16 @@ This is a working development baseline for the music-db web application migratio
 
 ---
 
+## API reference and test consistency
+
+[`api-reference.md`](api-reference.md) documents every endpoint, its response shape, validation rules, and behavioral dependencies (cascade delete, artist auto-create, 204 vs 404 on unknown id, etc.).
+
+[`src/AlbumViewer.Tests`](src/AlbumViewer.Tests) contains integration tests that assert all documented behaviors, including all interdependencies.
+
+**Rule:** any change to API behavior — response shape, validation rule, cascade logic, error code — must be reflected in both `api-reference.md` and the corresponding test. If behavior and documentation disagree, the tests are the ground truth.
+
+---
+
 ## Current state (2026-08-04)
 
 ### Backend — complete
@@ -83,4 +93,4 @@ db/
 Original: [RickStrahl/AlbumViewerVNext](https://github.com/RickStrahl/AlbumViewerVNext) — MIT licence.
 
 This fork is part of the music-db migration project and is not intended as a general-purpose sample.
-
+

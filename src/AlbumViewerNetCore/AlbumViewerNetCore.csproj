@@ -5,6 +5,7 @@
     <Version>1.2</Version>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <InternalsVisibleTo>AlbumViewer.Tests</InternalsVisibleTo>
 
 	  <NoWarn>$(NoWarn);CS1591;CS1572;CS1573;NU1903</NoWarn>
   </PropertyGroup>
@@ -19,6 +20,8 @@
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
 		
 	    <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
+		
+	    <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.1" />
 		
 	    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
 	    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
