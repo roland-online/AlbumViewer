@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>    
+    <TargetFramework>net10.0</TargetFramework>    
   </PropertyGroup>
   <ItemGroup>
     <!--<ProjectReference Include="..\Westwind.Utilities\Westwind.Utilities.csproj" />-->
   </ItemGroup>
   <ItemGroup>    
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
-    <PackageReference Include="Westwind.Utilities" Version="4.0.20" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.7" />    
+    <PackageReference Include="Westwind.Data.EfCore" Version="10.1.1" />
+    <PackageReference Include="Westwind.Utilities" Version="5.3.2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

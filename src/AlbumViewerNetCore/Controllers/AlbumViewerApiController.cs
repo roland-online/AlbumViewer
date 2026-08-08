@@ -80,7 +80,7 @@ namespace AlbumViewerAspNetCore
         [HttpGet("api/album/{id:int}")]
         public async Task<Album> GetAlbum(int id)
         {
-            return await AlbumRepo.Load(id);
+            return await AlbumRepo.LoadAsync(id);
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace AlbumViewerAspNetCore
         [HttpGet("api/artist/{id:int}")]
         public async Task<object> Artist(int id)
         {
-            var artist = await ArtistRepo.Load(id);
+            var artist = await ArtistRepo.LoadAsync(id);
 
             if (artist == null)
                 throw new ApiException("Invalid artist id.", 404);
