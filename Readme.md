@@ -2,7 +2,7 @@
 
 Forked from [RickStrahl/AlbumViewerVNext](https://github.com/RickStrahl/AlbumViewerVNext).
 
-This is a working development baseline for the music-db web application migration. The fork has been upgraded from its original .NET 8 / Angular 11 / SQLite state to a modern .NET 10 / PostgreSQL stack. The Angular frontend replacement (Angular 22 + Angular Material) is pending — see Step 3 of the setup checklist.
+This is a working development baseline for the music-db web application migration. The fork has been upgraded from its original .NET 8 / Angular 11 / SQLite state to a modern .NET 10 / PostgreSQL / Angular 22 + Material stack. The frontend is at functional parity with the original Angular 11 app.
 
 ---
 
@@ -16,7 +16,7 @@ This is a working development baseline for the music-db web application migratio
 
 ---
 
-## Current state (2026-08-04)
+## Current state (2026-08-09)
 
 ### Backend — complete
 
@@ -35,9 +35,20 @@ This is a working development baseline for the music-db web application migratio
 | `MapStaticAssets` static file serving | ✅ |
 | CRUD verified against PostgreSQL | ✅ |
 
-### Frontend — pending
+### Frontend — complete
 
-The existing Angular 11 + Bootstrap 4 pre-built files are in `wwwroot` and serve for API smoke-testing. The frontend will be replaced with Angular 22 + Angular Material (Step 3).
+| Component | Status |
+|---|---|
+| Angular 22.1.1 standalone (zoneless) | ✅ |
+| Angular Material 22.1.1 (Azure/Blue theme) | ✅ |
+| Albums list (card grid, search) | ✅ |
+| Album detail (cover, tracks, artist link) | ✅ |
+| Album editor (inline track editing, artist autocomplete) | ✅ |
+| Artists list (card grid, search) | ✅ |
+| Artist detail (album grid) | ✅ |
+| Artist editor | ✅ |
+| JWT auth (login, logout, auth guard) | ✅ |
+| `ng serve` dev proxy + LiveReload | ✅ |
 
 ---
 
@@ -63,15 +74,19 @@ dotnet run
 
 Navigate to `http://localhost:5000`. On first run, `EnsureCreated()` builds the schema and seeds data from `albums.js`.
 
+### Frontend
+
+```powershell
+cd src/AlbumViewerAngular
+ng serve          # dev server at localhost:4200 with /api proxy to localhost:5000
+ng build          # production build to src/AlbumViewerNetCore/wwwroot
+```
+
+**Dev workflow:** run both `dotnet run` (backend) and `ng serve` (frontend) simultaneously. Use `localhost:4200` during development for hot reload. Use `localhost:5000` after `ng build` to verify production output.
+
+> `wwwroot/` is a build artifact and is excluded from git. Run `ng build` before `dotnet run` on a fresh checkout.
+
 **Default login:** `test` / `test`
-
-### Frontend (current — pre-built Angular 11)
-
-Served from `wwwroot` by the backend. No separate frontend process needed for API testing.
-
-### Frontend (upcoming — Angular 22 + Angular Material)
-
-See [fork-setup-checklist.md Step 3](../music-db/docs/fork-setup-checklist.md).
 
 ---
 
@@ -81,7 +96,8 @@ See [fork-setup-checklist.md Step 3](../music-db/docs/fork-setup-checklist.md).
 src/
   AlbumViewerNetCore/     — ASP.NET Core 10 API host
   AlbumViewerBusiness/    — EF Core entities, repositories, DbContext
-  AlbumViewerAngular/     — Angular frontend (Angular 11 pre-built; pending replacement)
+  AlbumViewerAngular/     — Angular 22 + Material frontend (build output → AlbumViewerNetCore/wwwroot)
+  AlbumViewer.Tests/      — xUnit integration tests (26 tests, albumviewer_test DB)
 db/
   create_database.sql     — PostgreSQL database creation script
 ```
