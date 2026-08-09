@@ -1,0 +1,46 @@
+.list-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px 0;
+
+  .search-field { width: 320px; }
+
+  .count {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 0.875rem;
+  }
+}
+
+.artist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  padding: 16px 24px 24px;
+}
+
+.artist-card {
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+
+  &:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+
+  img[mat-card-image] {
+    height: 160px;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .artist-name {
+    font-weight: 500;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .album-count {
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.4);
+  }
+}

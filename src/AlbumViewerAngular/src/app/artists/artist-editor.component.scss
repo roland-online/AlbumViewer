@@ -1,0 +1,22 @@
+.editor-layout {
+  max-width: 580px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h2 { margin: 0 0 8px; }
+}
+
+.full-width { width: 100%; }
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.error {
+  color: #c62828;
+  font-size: 0.875rem;
+}
