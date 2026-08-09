@@ -15,7 +15,7 @@ const API_PATHS: Record<string, string> = {
 
 @Injectable({ providedIn: 'root' })
 export class AppConfig {
-  readonly apiBase = 'api/';
+  readonly apiBase = '/api/';
 
   url(name: string, ...params: (string | number)[]): string {
     let url = this.apiBase + (API_PATHS[name] ?? name);

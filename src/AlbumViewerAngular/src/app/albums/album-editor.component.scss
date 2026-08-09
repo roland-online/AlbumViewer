@@ -1,0 +1,58 @@
+.editor-layout {
+  max-width: 680px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h2 { margin: 0 0 8px; }
+  h3 { margin: 16px 0 8px; }
+}
+
+.full-width { width: 100%; }
+
+.row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+
+  .flex-grow { flex: 1; }
+}
+
+.flex-grow { flex: 1; }
+
+.tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.track-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .track-num {
+    width: 24px;
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 0.85rem;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .track-len {
+    width: 80px;
+    flex-shrink: 0;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.error {
+  color: #c62828;
+  font-size: 0.875rem;
+}

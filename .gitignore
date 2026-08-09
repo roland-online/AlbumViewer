@@ -2,6 +2,7 @@
 /dist
 /tmp
 /nginx/wwwroot
+src/AlbumViewerNetCore/wwwroot/
 
 # dependencies
 node_modules/
