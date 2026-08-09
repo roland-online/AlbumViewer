@@ -6,7 +6,22 @@ This is a working development baseline for the music-db web application migratio
 
 ---
 
-## API reference and test consistency
+## Security and privacy
+
+This repository is **public** (GitHub does not allow forked repositories to be made private).
+
+Rules that must be observed at all times:
+
+- **No personal data** — no real album, artist, or media item data from the music-db collection; only the AlbumViewer seed data (`albums.js`) belongs here
+- **No credentials** — no passwords, connection strings with passwords, API keys, or tokens committed to any file; use `dotnet user-secrets` for local dev secrets
+- **No private config** — no `appsettings.*.json` overrides containing real hostnames, usernames, or environment-specific values
+- **No database exports** — no SQL dumps, CSV exports, or any data derived from the live `musicdb` PostgreSQL database
+
+All actual music-db data, schema exports, and personal content live elsewhere.
+
+---
+
+
 
 [`api-reference.md`](api-reference.md) documents every endpoint, its response shape, validation rules, and behavioral dependencies (cascade delete, artist auto-create, 204 vs 404 on unknown id, etc.).
 
