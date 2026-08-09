@@ -1,0 +1,12 @@
+<mat-toolbar color="primary">
+  <a mat-button routerLink="/albums">Albums</a>
+  @if (auth.isAuthenticated()) {
+    <button mat-button (click)="auth.logout().subscribe()">Logout</button>
+  } @else {
+    <a mat-button routerLink="/login">Login</a>
+  }
+</mat-toolbar>
+
+<main>
+  <router-outlet />
+</main>
