@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../services/auth.service';
+import { NotificationService } from '../core/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -28,6 +29,7 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
+  private notify = inject(NotificationService);
 
   username = '';
   password = '';
@@ -36,8 +38,8 @@ export class LoginComponent {
   login() {
     this.error = '';
     this.auth.authenticate(this.username, this.password).subscribe({
-      next: () => this.router.navigate(['/albums']),
-      error: () => (this.error = 'Invalid username or password'),
+      next: () => { this.notify.success('Signed in'); this.router.navigate(['/albums']); },
+      error: () => { this.error = 'Invalid username or password'; this.notify.error('Login failed'); },
     });
   }
 }

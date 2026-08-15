@@ -9,6 +9,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AlbumService } from '../services/album.service';
 import { ArtistService } from '../services/artist.service';
 import { ErrorDisplayComponent } from '../core/error-display.component';
+import { NotificationService } from '../core/notification.service';
 import { Album, Artist, Track } from '../models/entities';
 
 @Component({
@@ -110,6 +111,7 @@ export class AlbumEditorComponent implements OnInit {
   artistName = '';
   artistSuggestions = signal<Artist[]>([]);
   error = signal('');
+  private notify = inject(NotificationService);
 
   ngOnInit() {
     const id = +this.route.snapshot.paramMap.get('id')!;
@@ -154,7 +156,7 @@ export class AlbumEditorComponent implements OnInit {
       a.Artist = { ...a.Artist!, ArtistName: this.artistName };
     }
     this.albumService.saveAlbum(a).subscribe({
-      next: saved => this.router.navigate(['/album', saved.Id]),
+      next: saved => { this.notify.success('Album saved'); this.router.navigate(['/album', saved.Id]); },
       error: err => this.error.set(err?.error?.message ?? err?.message ?? 'Save failed'),
     });
   }

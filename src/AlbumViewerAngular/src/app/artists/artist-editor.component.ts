@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ArtistService } from '../services/artist.service';
 import { ErrorDisplayComponent } from '../core/error-display.component';
+import { NotificationService } from '../core/notification.service';
 import { Artist } from '../models/entities';
 
 @Component({
@@ -54,6 +55,7 @@ export class ArtistEditorComponent implements OnInit {
 
   artist = signal<Artist | null>(null);
   error = signal('');
+  private notify = inject(NotificationService);
 
   ngOnInit() {
     const id = +this.route.snapshot.paramMap.get('id')!;
@@ -65,7 +67,7 @@ export class ArtistEditorComponent implements OnInit {
     const a = this.artist();
     if (!a) return;
     this.artistService.saveArtist(a).subscribe({
-      next: result => this.router.navigate(['/artist', result.Artist.Id]),
+      next: result => { this.notify.success('Artist saved'); this.router.navigate(['/artist', result.Artist.Id]); },
       error: err => this.error.set(err?.error?.message ?? err?.message ?? 'Save failed'),
     });
   }

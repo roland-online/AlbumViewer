@@ -8,6 +8,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AlbumService } from '../services/album.service';
 import { AuthService } from '../services/auth.service';
 import { ErrorDisplayComponent } from '../core/error-display.component';
+import { NotificationService } from '../core/notification.service';
 import { Album } from '../models/entities';
 import { NO_COVER_SVG } from '../core/no-cover';
 
@@ -70,6 +71,7 @@ export class AlbumDetailComponent implements OnInit {
   protected readonly noCover = NO_COVER_SVG;
   album = signal<Album | null>(null);
   errorMsg = signal('');
+  private notify = inject(NotificationService);
 
   ngOnInit() {
     const id = +this.route.snapshot.paramMap.get('id')!;
@@ -84,7 +86,7 @@ export class AlbumDetailComponent implements OnInit {
     const a = this.album();
     if (!a || !confirm(`Delete "${a.Title}"?`)) return;
     this.albumService.deleteAlbum(a).subscribe({
-      next: () => this.router.navigate(['/albums']),
+      next: () => { this.notify.success('Album deleted'); this.router.navigate(['/albums']); },
       error: err => this.errorMsg.set(err?.error?.message ?? err?.message ?? 'Delete failed'),
     });
   }
