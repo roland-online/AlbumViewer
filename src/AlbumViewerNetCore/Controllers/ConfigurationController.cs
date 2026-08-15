@@ -64,16 +64,17 @@ namespace AlbumViewerNetCore.Controllers
 
             var vname = Assembly.GetEntryAssembly()?.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName;
 
+            string pgConnStr = RawConfiguration.GetConnectionString("AlbumViewer");
             string useSqLite = RawConfiguration["Data:useSqLite"];
-
-            // in 3.0 this might work - 2.2: SERIOUSLY????
-            //string runtime = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+            string dataMode = !string.IsNullOrEmpty(pgConnStr) ? "PostgreSQL"
+                              : useSqLite == "true" ? "SqLite"
+                              : "Sql Server";
 
             var stats = new
             {
                 OsPlatform = System.Runtime.InteropServices.RuntimeInformation.OSDescription,
                 AspDotnetVersion = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription,
-                DataMode = useSqLite == "true" ? "SqLite" : "Sql Server"
+                DataMode = dataMode
             };
 
             return stats;

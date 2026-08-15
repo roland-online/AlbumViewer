@@ -31,10 +31,24 @@ var webHost = builder.WebHost;
 var environment = builder.Environment;
 
 
-services.AddDbContext<AlbumViewerContext>(builder =>
+services.AddDbContext<AlbumViewerContext>(options =>
 {
-    var connStr = configuration.GetConnectionString("AlbumViewer");
-    builder.UseNpgsql(connStr);
+    var pgConnStr = configuration.GetConnectionString("AlbumViewer");
+    if (!string.IsNullOrEmpty(pgConnStr))
+    {
+        // PostgreSQL — set via user secrets or environment (not in appsettings.json)
+        options.UseNpgsql(pgConnStr);
+    }
+    else if (configuration["Data:useSqLite"] == "true")
+    {
+        var sqlitePath = Path.Combine(environment.ContentRootPath, "AlbumViewerData.sqlite");
+        options.UseSqlite($"Data Source={sqlitePath}");
+    }
+    else
+    {
+        var connStr = configuration["Data:SqlServerConnectionString"];
+        options.UseSqlServer(connStr, opt => opt.EnableRetryOnFailure());
+    }
 });
 
 

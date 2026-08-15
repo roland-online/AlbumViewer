@@ -67,8 +67,7 @@ namespace AlbumViewerBusiness
         public async Task<List<Album>> GetAllAlbums(int page = 0, int pageSize = 15)
         {
             IQueryable<Album> albums = Context.Albums
-                .Include(ctx => ctx.Tracks)
-                .Include(ctx => ctx.Artist)
+                .Include(ctx => ctx.Artist)  // Tracks excluded — not shown in list UI
                 .OrderBy(alb => alb.Title);
 
             if (page > 0)
