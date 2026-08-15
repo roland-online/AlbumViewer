@@ -1,62 +1,66 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { ArtistService } from '../services/artist.service';
+import { AppConfig } from '../core/app-config';
 import { Artist } from '../models/entities';
 import { NO_COVER_SVG } from '../core/no-cover';
 
 @Component({
   selector: 'app-artist-list',
-  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatCardModule, MatIconModule],
+  imports: [MatIconModule],
   styleUrl: './artist-list.component.scss',
   template: `
     <div class="list-header">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Search artists</mat-label>
-        <input matInput [(ngModel)]="searchText" />
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-      <span class="count">{{ filtered().length }} artists</span>
+      <span class="page-header-text">
+        <mat-icon>group</mat-icon> Artists
+        <span class="count">{{ filtered().length }}</span>
+      </span>
     </div>
 
-    <div class="artist-grid">
+    <div class="artist-list">
       @for (artist of filtered(); track artist.Id) {
-        <mat-card class="artist-card" (click)="open(artist)">
-          <img mat-card-image
-               [src]="artist.ImageUrl || noCover"
+        <div class="artist-row" (click)="open(artist)" role="button">
+          <mat-icon class="artist-icon">group</mat-icon>
+          <span class="artist-count">{{ artist.AlbumCount }}</span>
+          <span class="artist-name">{{ artist.ArtistName }}</span>
+          <img [src]="artist.ImageUrl || noCover"
                [alt]="artist.ArtistName"
+               class="artist-thumb"
                (error)="onImgError($event)" />
-          <mat-card-content>
-            <div class="artist-name">{{ artist.ArtistName }}</div>
-            <div class="album-count">{{ artist.AlbumCount }} albums</div>
-          </mat-card-content>
-        </mat-card>
+        </div>
       }
     </div>
   `,
 })
-export class ArtistListComponent implements OnInit {
+export class ArtistListComponent implements OnInit, OnDestroy {
   private artistService = inject(ArtistService);
   private router = inject(Router);
+  private appConfig = inject(AppConfig);
 
   protected readonly noCover = NO_COVER_SVG;
-  searchText = '';
   private allArtists = signal<Artist[]>([]);
   protected filtered = computed(() => {
-    const q = this.searchText.toLowerCase();
+    const q = this.appConfig.searchText().toLowerCase();
     if (!q) return this.allArtists();
     return this.allArtists().filter(a => a.ArtistName.toLowerCase().includes(q));
   });
 
   ngOnInit() {
-    this.artistService.getArtists().subscribe(list => this.allArtists.set(list));
+    this.appConfig.isSearchAllowed.set(true);
+    this.appConfig.searchText.set('');
+    this.artistService.getArtists().subscribe(list => {
+      this.allArtists.set(list);
+      window.scrollTo({ top: this.artistService.listScrollPos, behavior: 'instant' });
+    });
+  }
+
+  ngOnDestroy() {
+    this.appConfig.isSearchAllowed.set(false);
   }
 
   open(artist: Artist) {
+    this.artistService.listScrollPos = window.scrollY;
     this.router.navigate(['/artist', artist.Id]);
   }
 
