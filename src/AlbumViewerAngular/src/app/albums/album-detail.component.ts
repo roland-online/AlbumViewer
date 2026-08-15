@@ -7,16 +7,18 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AlbumService } from '../services/album.service';
 import { AuthService } from '../services/auth.service';
+import { ErrorDisplayComponent } from '../core/error-display.component';
 import { Album } from '../models/entities';
 import { NO_COVER_SVG } from '../core/no-cover';
 
 @Component({
   selector: 'app-album-detail',
-  imports: [RouterLink, MatButtonModule, MatIconModule, MatListModule, MatDividerModule, MatProgressBarModule],
+  imports: [RouterLink, MatButtonModule, MatIconModule, MatListModule, MatDividerModule, MatProgressBarModule, ErrorDisplayComponent],
   styleUrl: './album-detail.component.scss',
   template: `
     @if (album()) {
       <div class="detail-layout">
+        <app-error-display [error]="errorMsg()" (dismiss)="errorMsg.set('')" />
         <div class="cover-panel">
           <img [src]="album()!.ImageUrl || noCover"
                [alt]="album()!.Title"
@@ -67,6 +69,7 @@ export class AlbumDetailComponent implements OnInit {
 
   protected readonly noCover = NO_COVER_SVG;
   album = signal<Album | null>(null);
+  errorMsg = signal('');
 
   ngOnInit() {
     const id = +this.route.snapshot.paramMap.get('id')!;
@@ -80,9 +83,10 @@ export class AlbumDetailComponent implements OnInit {
   remove() {
     const a = this.album();
     if (!a || !confirm(`Delete "${a.Title}"?`)) return;
-    this.albumService.deleteAlbum(a).subscribe(() =>
-      this.router.navigate(['/albums'])
-    );
+    this.albumService.deleteAlbum(a).subscribe({
+      next: () => this.router.navigate(['/albums']),
+      error: err => this.errorMsg.set(err?.message ?? 'Delete failed'),
+    });
   }
 
   onImgError(event: Event) {

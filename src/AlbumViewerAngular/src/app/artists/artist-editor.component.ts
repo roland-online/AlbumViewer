@@ -5,11 +5,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ArtistService } from '../services/artist.service';
+import { ErrorDisplayComponent } from '../core/error-display.component';
 import { Artist } from '../models/entities';
 
 @Component({
   selector: 'app-artist-editor',
-  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, ErrorDisplayComponent],
   styleUrl: './artist-editor.component.scss',
   template: `
     @if (artist()) {
@@ -36,7 +37,7 @@ import { Artist } from '../models/entities';
           <input matInput [(ngModel)]="artist()!.AmazonUrl" />
         </mat-form-field>
 
-        @if (error()) { <p class="error">{{ error() }}</p> }
+        <app-error-display [error]="error()" (dismiss)="error.set('')" />
 
         <div class="actions">
           <button mat-flat-button (click)="save()">Save</button>

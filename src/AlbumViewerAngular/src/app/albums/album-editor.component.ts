@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AlbumService } from '../services/album.service';
 import { ArtistService } from '../services/artist.service';
+import { ErrorDisplayComponent } from '../core/error-display.component';
 import { Album, Artist, Track } from '../models/entities';
 
 @Component({
@@ -15,7 +16,7 @@ import { Album, Artist, Track } from '../models/entities';
   imports: [
     FormsModule,
     MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule,
-    MatAutocompleteModule,
+    MatAutocompleteModule, ErrorDisplayComponent,
   ],
   styleUrl: './album-editor.component.scss',
   template: `
@@ -89,7 +90,7 @@ import { Album, Artist, Track } from '../models/entities';
           </button>
         </div>
 
-        @if (error()) { <p class="error">{{ error() }}</p> }
+        <app-error-display [error]="error()" (dismiss)="error.set('')" />
 
         <div class="actions">
           <button mat-flat-button (click)="save()">Save</button>

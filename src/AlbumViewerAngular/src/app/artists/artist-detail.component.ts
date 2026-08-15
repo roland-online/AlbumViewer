@@ -6,16 +6,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ArtistService } from '../services/artist.service';
 import { AuthService } from '../services/auth.service';
+import { ErrorDisplayComponent } from '../core/error-display.component';
 import { Artist, Album } from '../models/entities';
 import { NO_COVER_SVG } from '../core/no-cover';
 
 @Component({
   selector: 'app-artist-detail',
-  imports: [MatButtonModule, MatIconModule, MatProgressBarModule, MatCardModule],
+  imports: [MatButtonModule, MatIconModule, MatProgressBarModule, MatCardModule, ErrorDisplayComponent],
   styleUrl: './artist-detail.component.scss',
   template: `
     @if (artist()) {
       <div class="artist-layout">
+        <app-error-display [error]="errorMsg()" (dismiss)="errorMsg.set('')" />
         <div class="artist-header">
           <img [src]="artist()!.ImageUrl || noCover"
                [alt]="artist()!.ArtistName"
@@ -69,6 +71,7 @@ export class ArtistDetailComponent implements OnInit {
 
   protected readonly noCover = NO_COVER_SVG;
   artist = signal<Artist | null>(null);
+  errorMsg = signal('');
 
   ngOnInit() {
     const id = +this.route.snapshot.paramMap.get('id')!;
@@ -90,9 +93,10 @@ export class ArtistDetailComponent implements OnInit {
   remove() {
     const a = this.artist();
     if (!a || !confirm(`Delete "${a.ArtistName}" and all their albums?`)) return;
-    this.artistService.deleteArtist(a).subscribe(() =>
-      this.router.navigate(['/albums'])
-    );
+    this.artistService.deleteArtist(a).subscribe({
+      next: () => this.router.navigate(['/albums']),
+      error: err => this.errorMsg.set(err?.message ?? 'Delete failed'),
+    });
   }
 
   onImgError(event: Event) {

@@ -4,17 +4,19 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AlbumService } from '../services/album.service';
 import { AppConfig } from '../core/app-config';
+import { ErrorDisplayComponent } from '../core/error-display.component';
 import { Album } from '../models/entities';
 import { NO_COVER_SVG } from '../core/no-cover';
 
 @Component({
   selector: 'app-album-list',
-  imports: [MatIconModule, MatProgressBarModule],
+  imports: [MatIconModule, MatProgressBarModule, ErrorDisplayComponent],
   styleUrl: './album-list.component.scss',
   template: `
     @if (loading()) {
       <mat-progress-bar mode="indeterminate" />
     }
+    <app-error-display [error]="errorMsg()" (dismiss)="errorMsg.set('')" />
 
     <div class="list-header">
       <span class="page-header-text">
@@ -49,6 +51,7 @@ export class AlbumListComponent implements OnInit, OnDestroy {
 
   protected readonly noCover = NO_COVER_SVG;
   protected loading = signal(true);
+  protected errorMsg = signal('');
   private allAlbums = signal<Album[]>([]);
   protected filtered = computed(() => {
     const q = this.appConfig.searchText().toLowerCase();
@@ -62,10 +65,13 @@ export class AlbumListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.appConfig.isSearchAllowed.set(true);
     this.appConfig.searchText.set('');
-    this.albums.getAlbums().subscribe(list => {
-      this.allAlbums.set(list);
-      this.loading.set(false);
-      window.scrollTo({ top: this.albums.listScrollPos, behavior: 'instant' });
+    this.albums.getAlbums().subscribe({
+      next: list => {
+        this.allAlbums.set(list);
+        this.loading.set(false);
+        window.scrollTo({ top: this.albums.listScrollPos, behavior: 'instant' });
+      },
+      error: err => { this.loading.set(false); this.errorMsg.set(err?.message ?? 'Failed to load albums'); },
     });
   }
 

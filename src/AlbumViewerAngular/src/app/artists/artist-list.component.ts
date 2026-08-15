@@ -4,17 +4,19 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ArtistService } from '../services/artist.service';
 import { AppConfig } from '../core/app-config';
+import { ErrorDisplayComponent } from '../core/error-display.component';
 import { Artist } from '../models/entities';
 import { NO_COVER_SVG } from '../core/no-cover';
 
 @Component({
   selector: 'app-artist-list',
-  imports: [MatIconModule, MatProgressBarModule],
+  imports: [MatIconModule, MatProgressBarModule, ErrorDisplayComponent],
   styleUrl: './artist-list.component.scss',
   template: `
     @if (loading()) {
       <mat-progress-bar mode="indeterminate" />
     }
+    <app-error-display [error]="errorMsg()" (dismiss)="errorMsg.set('')" />
 
     <div class="list-header">
       <span class="page-header-text">
@@ -45,6 +47,7 @@ export class ArtistListComponent implements OnInit, OnDestroy {
 
   protected readonly noCover = NO_COVER_SVG;
   protected loading = signal(true);
+  protected errorMsg = signal('');
   private allArtists = signal<Artist[]>([]);
   protected filtered = computed(() => {
     const q = this.appConfig.searchText().toLowerCase();
@@ -55,10 +58,13 @@ export class ArtistListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.appConfig.isSearchAllowed.set(true);
     this.appConfig.searchText.set('');
-    this.artistService.getArtists().subscribe(list => {
-      this.allArtists.set(list);
-      this.loading.set(false);
-      window.scrollTo({ top: this.artistService.listScrollPos, behavior: 'instant' });
+    this.artistService.getArtists().subscribe({
+      next: list => {
+        this.allArtists.set(list);
+        this.loading.set(false);
+        window.scrollTo({ top: this.artistService.listScrollPos, behavior: 'instant' });
+      },
+      error: err => { this.loading.set(false); this.errorMsg.set(err?.message ?? 'Failed to load artists'); },
     });
   }
 
