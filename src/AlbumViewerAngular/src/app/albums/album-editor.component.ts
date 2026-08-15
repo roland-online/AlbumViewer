@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -15,87 +15,127 @@ import { Album, Artist, Track } from '../models/entities';
 @Component({
   selector: 'app-album-editor',
   imports: [
-    FormsModule,
+    RouterLink, FormsModule,
     MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule,
     MatAutocompleteModule, ErrorDisplayComponent,
   ],
   styleUrl: './album-editor.component.scss',
   template: `
     @if (album()) {
-      <div class="editor-layout">
-        <h2>{{ album()!.Id ? 'Edit Album' : 'New Album' }}</h2>
+      <div class="editor-container">
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Title</mat-label>
-          <input matInput [(ngModel)]="album()!.Title" required />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Artist</mat-label>
-          <input matInput [(ngModel)]="artistName"
-                 [matAutocomplete]="artistAc"
-                 (input)="lookupArtist($event)" />
-          <mat-autocomplete #artistAc (optionSelected)="selectArtist($event.option.value)">
-            @for (a of artistSuggestions(); track a.Id) {
-              <mat-option [value]="a">{{ a.ArtistName }}</mat-option>
-            }
-          </mat-autocomplete>
-        </mat-form-field>
-
-        <div class="row">
-          <mat-form-field appearance="outline">
-            <mat-label>Year</mat-label>
-            <input matInput type="number" [(ngModel)]="album()!.Year" />
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="flex-grow">
-            <mat-label>Image URL</mat-label>
-            <input matInput [(ngModel)]="album()!.ImageUrl" />
-          </mat-form-field>
-        </div>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput [(ngModel)]="album()!.Description" rows="4"></textarea>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Amazon URL</mat-label>
-          <input matInput [(ngModel)]="album()!.AmazonUrl" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Spotify URL</mat-label>
-          <input matInput [(ngModel)]="album()!.SpotifyUrl" />
-        </mat-form-field>
-
-        <!-- Track list -->
-        <h3>Tracks</h3>
-        <div class="tracks">
-          @for (track of album()!.Tracks; track track.Id || $index; let i = $index) {
-            <div class="track-row">
-              <span class="track-num">{{ i + 1 }}</span>
-              <mat-form-field appearance="outline" class="flex-grow">
-                <input matInput [(ngModel)]="track.SongName" placeholder="Song name" />
-              </mat-form-field>
-              <mat-form-field appearance="outline" class="track-len">
-                <input matInput [(ngModel)]="track.Length" placeholder="Length" />
-              </mat-form-field>
-              <button mat-icon-button color="warn" (click)="removeTrack(track)">
-                <mat-icon>remove_circle_outline</mat-icon>
-              </button>
-            </div>
+        <!-- header button bar -->
+        <div class="btn-group">
+          <a mat-stroked-button routerLink="/albums">
+            <mat-icon>list</mat-icon> List
+          </a>
+          @if (album()!.Id) {
+            <a mat-stroked-button [routerLink]="['/album', album()!.Id]">
+              <mat-icon>visibility</mat-icon> View
+            </a>
           }
-          <button mat-stroked-button (click)="addTrack()">
-            <mat-icon>add</mat-icon> Add Track
-          </button>
+          @if (album()!.AmazonUrl) {
+            <a mat-stroked-button [href]="album()!.AmazonUrl" target="_amazon">
+              <mat-icon>attach_money</mat-icon> Buy
+            </a>
+          }
         </div>
 
         <app-error-display [error]="error()" (dismiss)="error.set('')" />
 
-        <div class="actions">
-          <button mat-flat-button (click)="save()">Save</button>
-          <button mat-stroked-button (click)="cancel()">Cancel</button>
+        <div class="editor-layout">
+          <!-- left: form -->
+          <div class="editor-form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Title</mat-label>
+              <input matInput [(ngModel)]="album()!.Title" required />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Artist</mat-label>
+              <input matInput [(ngModel)]="artistName"
+                     [matAutocomplete]="artistAc"
+                     (input)="lookupArtist($event)" />
+              <mat-autocomplete #artistAc (optionSelected)="selectArtist($event.option.value)">
+                @for (a of artistSuggestions(); track a.Id) {
+                  <mat-option [value]="a">{{ a.ArtistName }}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <div class="row">
+              <mat-form-field appearance="outline">
+                <mat-label>Year</mat-label>
+                <input matInput type="number" [(ngModel)]="album()!.Year" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="flex-grow">
+                <mat-label>Image URL</mat-label>
+                <input matInput [(ngModel)]="album()!.ImageUrl" />
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <textarea matInput [(ngModel)]="album()!.Description" rows="4"></textarea>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Amazon URL</mat-label>
+              <input matInput [(ngModel)]="album()!.AmazonUrl" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Spotify URL</mat-label>
+              <input matInput [(ngModel)]="album()!.SpotifyUrl" />
+            </mat-form-field>
+
+            <h3>Tracks</h3>
+            <div class="tracks">
+              @for (track of album()!.Tracks; track track.Id || $index; let i = $index) {
+                <div class="track-row">
+                  <span class="track-num">{{ i + 1 }}</span>
+                  <mat-form-field appearance="outline" class="flex-grow">
+                    <input matInput [(ngModel)]="track.SongName" placeholder="Song name" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="track-len">
+                    <input matInput [(ngModel)]="track.Length" placeholder="Length" />
+                  </mat-form-field>
+                  <button mat-icon-button color="warn" (click)="removeTrack(track)">
+                    <mat-icon>remove_circle_outline</mat-icon>
+                  </button>
+                </div>
+              }
+              <button mat-stroked-button (click)="addTrack()">
+                <mat-icon>add</mat-icon> Add Track
+              </button>
+            </div>
+
+            <div class="actions">
+              <button mat-flat-button (click)="save()">Save</button>
+              <button mat-stroked-button (click)="cancel()">Cancel</button>
+            </div>
+          </div>
+
+          <!-- right: preview (shows loaded state; zoneless Angular does not live-update on ngModel mutations) -->
+          <div class="editor-preview">
+            <h3>Preview</h3>
+            <img [src]="album()!.ImageUrl || ''"
+                 onerror="this.src=''"
+                 class="album-image-big" />
+            <h2 class="album-title-big">{{ album()!.Title }}</h2>
+            <div class="album-artist">
+              by {{ album()!.Artist?.ArtistName }}
+              {{ album()!.Year ? 'in ' + album()!.Year : '' }}
+              @if (album()!.AmazonUrl) {
+                · <a [href]="album()!.AmazonUrl" target="_amazon">Buy on Amazon</a>
+              }
+            </div>
+            <div class="album-descript line-breaks">{{ album()!.Description }}</div>
+            <hr />
+            @for (track of album()!.Tracks; track track.Id || $index; let i = $index) {
+              <div class="song">{{ i + 1 }}. {{ track.SongName }} <span class="track-len">{{ track.Length }}</span></div>
+            }
+          </div>
         </div>
       </div>
     }
