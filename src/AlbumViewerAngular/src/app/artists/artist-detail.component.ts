@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ArtistService } from '../services/artist.service';
 import { AuthService } from '../services/auth.service';
 import { Artist, Album } from '../models/entities';
@@ -10,7 +11,7 @@ import { NO_COVER_SVG } from '../core/no-cover';
 
 @Component({
   selector: 'app-artist-detail',
-  imports: [MatCardModule, MatButtonModule, MatIconModule],
+  imports: [MatButtonModule, MatIconModule, MatProgressBarModule, MatCardModule],
   styleUrl: './artist-detail.component.scss',
   template: `
     @if (artist()) {
@@ -56,7 +57,7 @@ import { NO_COVER_SVG } from '../core/no-cover';
         </div>
       </div>
     } @else {
-      <p class="loading">Loading…</p>
+      <mat-progress-bar mode="indeterminate" />
     }
   `,
 })

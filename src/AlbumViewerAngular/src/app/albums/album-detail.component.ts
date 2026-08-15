@@ -1,10 +1,10 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AlbumService } from '../services/album.service';
 import { AuthService } from '../services/auth.service';
 import { Album } from '../models/entities';
@@ -12,7 +12,7 @@ import { NO_COVER_SVG } from '../core/no-cover';
 
 @Component({
   selector: 'app-album-detail',
-  imports: [RouterLink, MatCardModule, MatButtonModule, MatIconModule, MatListModule, MatDividerModule],
+  imports: [RouterLink, MatButtonModule, MatIconModule, MatListModule, MatDividerModule, MatProgressBarModule],
   styleUrl: './album-detail.component.scss',
   template: `
     @if (album()) {
@@ -55,7 +55,7 @@ import { NO_COVER_SVG } from '../core/no-cover';
         </div>
       </div>
     } @else {
-      <p class="loading">Loading…</p>
+      <mat-progress-bar mode="indeterminate" />
     }
   `,
 })

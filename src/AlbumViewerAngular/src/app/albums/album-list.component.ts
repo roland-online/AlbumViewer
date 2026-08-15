@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AlbumService } from '../services/album.service';
 import { AppConfig } from '../core/app-config';
 import { Album } from '../models/entities';
@@ -9,9 +9,13 @@ import { NO_COVER_SVG } from '../core/no-cover';
 
 @Component({
   selector: 'app-album-list',
-  imports: [MatCardModule, MatIconModule],
+  imports: [MatIconModule, MatProgressBarModule],
   styleUrl: './album-list.component.scss',
   template: `
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
     <div class="list-header">
       <span class="page-header-text">
         <mat-icon>album</mat-icon> Albums
@@ -44,6 +48,7 @@ export class AlbumListComponent implements OnInit, OnDestroy {
   private appConfig = inject(AppConfig);
 
   protected readonly noCover = NO_COVER_SVG;
+  protected loading = signal(true);
   private allAlbums = signal<Album[]>([]);
   protected filtered = computed(() => {
     const q = this.appConfig.searchText().toLowerCase();
@@ -59,6 +64,7 @@ export class AlbumListComponent implements OnInit, OnDestroy {
     this.appConfig.searchText.set('');
     this.albums.getAlbums().subscribe(list => {
       this.allAlbums.set(list);
+      this.loading.set(false);
       window.scrollTo({ top: this.albums.listScrollPos, behavior: 'instant' });
     });
   }

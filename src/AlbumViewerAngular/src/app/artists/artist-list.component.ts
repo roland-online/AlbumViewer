@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ArtistService } from '../services/artist.service';
 import { AppConfig } from '../core/app-config';
 import { Artist } from '../models/entities';
@@ -8,9 +9,13 @@ import { NO_COVER_SVG } from '../core/no-cover';
 
 @Component({
   selector: 'app-artist-list',
-  imports: [MatIconModule],
+  imports: [MatIconModule, MatProgressBarModule],
   styleUrl: './artist-list.component.scss',
   template: `
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
     <div class="list-header">
       <span class="page-header-text">
         <mat-icon>group</mat-icon> Artists
@@ -39,6 +44,7 @@ export class ArtistListComponent implements OnInit, OnDestroy {
   private appConfig = inject(AppConfig);
 
   protected readonly noCover = NO_COVER_SVG;
+  protected loading = signal(true);
   private allArtists = signal<Artist[]>([]);
   protected filtered = computed(() => {
     const q = this.appConfig.searchText().toLowerCase();
@@ -51,6 +57,7 @@ export class ArtistListComponent implements OnInit, OnDestroy {
     this.appConfig.searchText.set('');
     this.artistService.getArtists().subscribe(list => {
       this.allArtists.set(list);
+      this.loading.set(false);
       window.scrollTo({ top: this.artistService.listScrollPos, behavior: 'instant' });
     });
   }
