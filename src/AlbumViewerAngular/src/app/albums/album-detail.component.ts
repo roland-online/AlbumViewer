@@ -18,43 +18,80 @@ import { NO_COVER_SVG } from '../core/no-cover';
   styleUrl: './album-detail.component.scss',
   template: `
     @if (album()) {
-      <div class="detail-layout">
-        <app-error-display [error]="errorMsg()" (dismiss)="errorMsg.set('')" />
-        <div class="cover-panel">
-          <img [src]="album()!.ImageUrl || noCover"
-               [alt]="album()!.Title"
-               (error)="onImgError($event)"
-               class="cover-img" />
+      <div class="detail-container">
+        <div class="btn-group" role="group">
+          <a mat-stroked-button routerLink="/albums">
+            <mat-icon>list</mat-icon> Albums
+          </a>
           @if (auth.isAuthenticated()) {
-            <div class="cover-actions">
-              <button mat-flat-button (click)="edit()">
-                <mat-icon>edit</mat-icon> Edit
-              </button>
-              <button mat-stroked-button color="warn" (click)="remove()">
-                <mat-icon>delete</mat-icon> Delete
-              </button>
-            </div>
+            <a mat-stroked-button [routerLink]="['/album/edit', album()!.Id]">
+              <mat-icon>edit</mat-icon> Edit
+            </a>
+          }
+          @if (album()!.AmazonUrl) {
+            <a mat-stroked-button [href]="album()!.AmazonUrl" target="_amazon">
+              <mat-icon>attach_money</mat-icon> Buy
+            </a>
+          }
+          @if (auth.isAuthenticated()) {
+            <button mat-stroked-button color="warn" (click)="remove()">
+              <mat-icon>delete</mat-icon> Delete
+            </button>
           }
         </div>
 
-        <div class="info-panel">
-          <h1>{{ album()!.Title }}</h1>
-          <h2>
-            <a [routerLink]="['/artist', album()!.Artist?.Id]">{{ album()!.Artist?.ArtistName }}</a>
-            @if (album()!.Year) { · {{ album()!.Year }} }
-          </h2>
-          <p class="description">{{ album()!.Description }}</p>
-          <mat-divider />
+        <app-error-display [error]="errorMsg()" (dismiss)="errorMsg.set('')" />
 
-          <mat-list class="track-list">
-            @for (track of album()!.Tracks; track track.Id; let i = $index) {
-              <mat-list-item>
-                <span matListItemMeta class="track-num">{{ i + 1 }}</span>
-                <span matListItemTitle>{{ track.SongName }}</span>
-                <span matListItemLine class="track-len">{{ track.Length }}</span>
-              </mat-list-item>
+        <div class="detail-layout">
+          <div class="cover-panel">
+            <img [src]="album()!.ImageUrl || noCover"
+                 [alt]="album()!.Title"
+                 (error)="onImgError($event)"
+                 class="cover-img" />
+          </div>
+
+          <div class="info-panel">
+            <h2 class="album-title-big">{{ album()!.Title }}</h2>
+            <div class="album-artist">
+              by <a [routerLink]="['/artist', album()!.Artist?.Id]">{{ album()!.Artist?.ArtistName }}</a>
+              {{ album()!.Year ? 'in ' + album()!.Year : '' }}
+            </div>
+            @if (album()!.AmazonUrl) {
+              <a [href]="album()!.AmazonUrl" target="_amazon" class="media-link">
+                <mat-icon>attach_money</mat-icon> Buy
+              </a>
             }
-          </mat-list>
+            @if (album()!.SpotifyUrl) {
+              <a [href]="album()!.SpotifyUrl" target="_spotify" class="media-link">
+                <mat-icon>volume_up</mat-icon> Play
+              </a>
+            }
+            <div class="description line-breaks">{{ album()!.Description }}</div>
+            <mat-divider />
+
+            <mat-list class="track-list">
+              @for (track of album()!.Tracks; track track.Id; let i = $index) {
+                <mat-list-item>
+                  <span matListItemMeta class="track-num">{{ i + 1 }}</span>
+                  <span matListItemTitle>{{ track.SongName }}</span>
+                  <span matListItemLine class="track-len">{{ track.Length }}</span>
+                </mat-list-item>
+              }
+            </mat-list>
+
+            <hr />
+            <div class="more-from">
+              More from
+              <a [routerLink]="['/artist', album()!.Artist?.Id]">
+                {{ album()!.Artist?.ArtistName }}<br />
+                @if (album()!.Artist?.ImageUrl) {
+                  <img [src]="album()!.Artist!.ImageUrl!"
+                       (error)="onImgError($event)"
+                       class="artist-thumb" />
+                }
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     } @else {
@@ -76,10 +113,6 @@ export class AlbumDetailComponent implements OnInit {
   ngOnInit() {
     const id = +this.route.snapshot.paramMap.get('id')!;
     this.albumService.getAlbum(id).subscribe(a => this.album.set(a));
-  }
-
-  edit() {
-    this.router.navigate(['/album/edit', this.album()!.Id]);
   }
 
   remove() {
