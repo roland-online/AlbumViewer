@@ -155,7 +155,7 @@ export class AlbumEditorComponent implements OnInit {
     }
     this.albumService.saveAlbum(a).subscribe({
       next: saved => this.router.navigate(['/album', saved.Id]),
-      error: err => this.error.set(err?.message ?? 'Save failed'),
+      error: err => this.error.set(err?.error?.message ?? err?.message ?? 'Save failed'),
     });
   }
 
@@ -164,4 +164,5 @@ export class AlbumEditorComponent implements OnInit {
     this.router.navigate(id ? ['/album', id] : ['/albums']);
   }
 }
+
 

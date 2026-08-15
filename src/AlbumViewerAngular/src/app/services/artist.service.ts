@@ -63,3 +63,4 @@ export class ArtistService {
     else this.artistList[idx] = artist;
   }
 }
+

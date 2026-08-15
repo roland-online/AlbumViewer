@@ -28,3 +28,4 @@ export class AppConfig {
     return url;
   }
 }
+

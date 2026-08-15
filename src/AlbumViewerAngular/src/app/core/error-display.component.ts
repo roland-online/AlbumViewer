@@ -36,3 +36,4 @@ export class ErrorDisplayComponent {
   error = input<string>('');
   dismiss = output<void>();
 }
+

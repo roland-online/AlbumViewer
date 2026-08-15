@@ -66,7 +66,7 @@ export class ArtistEditorComponent implements OnInit {
     if (!a) return;
     this.artistService.saveArtist(a).subscribe({
       next: result => this.router.navigate(['/artist', result.Artist.Id]),
-      error: err => this.error.set(err?.message ?? 'Save failed'),
+      error: err => this.error.set(err?.error?.message ?? err?.message ?? 'Save failed'),
     });
   }
 
@@ -74,3 +74,4 @@ export class ArtistEditorComponent implements OnInit {
     this.router.navigate(['/artist', this.artist()?.Id]);
   }
 }
+

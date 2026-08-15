@@ -71,7 +71,7 @@ export class AlbumListComponent implements OnInit, OnDestroy {
         this.loading.set(false);
         window.scrollTo({ top: this.albums.listScrollPos, behavior: 'instant' });
       },
-      error: err => { this.loading.set(false); this.errorMsg.set(err?.message ?? 'Failed to load albums'); },
+      error: err => { this.loading.set(false); this.errorMsg.set(err?.error?.message ?? err?.message ?? 'Failed to load albums'); },
     });
   }
 
@@ -90,4 +90,5 @@ export class AlbumListComponent implements OnInit, OnDestroy {
     if (!img.dataset['fallback']) { img.dataset['fallback'] = '1'; img.src = NO_COVER_SVG; }
   }
 }
+
 

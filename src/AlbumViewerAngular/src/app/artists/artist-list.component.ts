@@ -64,7 +64,7 @@ export class ArtistListComponent implements OnInit, OnDestroy {
         this.loading.set(false);
         window.scrollTo({ top: this.artistService.listScrollPos, behavior: 'instant' });
       },
-      error: err => { this.loading.set(false); this.errorMsg.set(err?.message ?? 'Failed to load artists'); },
+      error: err => { this.loading.set(false); this.errorMsg.set(err?.error?.message ?? err?.message ?? 'Failed to load artists'); },
     });
   }
 
@@ -82,3 +82,4 @@ export class ArtistListComponent implements OnInit, OnDestroy {
     if (!img.dataset['fallback']) { img.dataset['fallback'] = '1'; img.src = NO_COVER_SVG; }
   }
 }
+

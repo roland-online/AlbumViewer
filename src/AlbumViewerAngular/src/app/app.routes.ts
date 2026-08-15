@@ -18,3 +18,4 @@ export const routes: Routes = [
   { path: 'artist/:id', component: ArtistDetailComponent },
   { path: 'login', component: LoginComponent },
 ];
+

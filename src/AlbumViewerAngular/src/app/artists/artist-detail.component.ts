@@ -95,7 +95,7 @@ export class ArtistDetailComponent implements OnInit {
     if (!a || !confirm(`Delete "${a.ArtistName}" and all their albums?`)) return;
     this.artistService.deleteArtist(a).subscribe({
       next: () => this.router.navigate(['/albums']),
-      error: err => this.errorMsg.set(err?.message ?? 'Delete failed'),
+      error: err => this.errorMsg.set(err?.error?.message ?? err?.message ?? 'Delete failed'),
     });
   }
 
@@ -104,4 +104,5 @@ export class ArtistDetailComponent implements OnInit {
     if (!img.dataset['fallback']) { img.dataset['fallback'] = '1'; img.src = NO_COVER_SVG; }
   }
 }
+
 
