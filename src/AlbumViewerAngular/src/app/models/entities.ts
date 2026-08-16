@@ -26,6 +26,11 @@ export interface ArtistResult {
   Albums: Album[];
 }
 
+export interface ArtistLookupItem {
+  id: string;
+  name: string;
+}
+
 export interface Track {
   Id: number;
   AlbumId: number;

@@ -2,6 +2,7 @@ import { Component, inject, OnInit, OnDestroy, signal, computed } from '@angular
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatListModule } from '@angular/material/list';
 import { ArtistService } from '../services/artist.service';
 import { AppConfig } from '../core/app-config';
 import { ErrorDisplayComponent } from '../core/error-display.component';
@@ -10,7 +11,7 @@ import { NO_COVER_SVG } from '../core/no-cover';
 
 @Component({
   selector: 'app-artist-list',
-  imports: [MatIconModule, MatProgressBarModule, ErrorDisplayComponent],
+  imports: [MatIconModule, MatProgressBarModule, MatListModule, ErrorDisplayComponent],
   styleUrl: './artist-list.component.scss',
   template: `
     @if (loading()) {
@@ -25,7 +26,8 @@ import { NO_COVER_SVG } from '../core/no-cover';
       </span>
     </div>
 
-    <div class="artist-list">
+    <!-- this div being replaced by mat-list below -->
+    <div class="artist-list" style="display: none;">
       @for (artist of filtered(); track artist.Id) {
         <div class="artist-row" (click)="open(artist)" role="button">
           <mat-icon class="artist-icon">group</mat-icon>
@@ -38,6 +40,20 @@ import { NO_COVER_SVG } from '../core/no-cover';
         </div>
       }
     </div>
+
+    <mat-list class="artist-list">
+      @for (artist of filtered(); track artist.Id) {
+        <mat-list-item class="artist-row" (click)="open(artist)" role="button">
+          <mat-icon class="artist-icon">group</mat-icon>
+          <span class="artist-count">{{ artist.AlbumCount }}</span>
+          <span class="artist-name">{{ artist.ArtistName }}</span>
+          <img [src]="artist.ImageUrl || noCover"
+               [alt]="artist.ArtistName"
+               class="artist-thumb"
+               (error)="onImgError($event)" />
+        </mat-list-item>
+      }
+    </mat-list>
   `,
 })
 export class ArtistListComponent implements OnInit, OnDestroy {

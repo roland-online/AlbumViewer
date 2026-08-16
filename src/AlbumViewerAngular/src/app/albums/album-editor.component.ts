@@ -10,7 +10,8 @@ import { AlbumService } from '../services/album.service';
 import { ArtistService } from '../services/artist.service';
 import { ErrorDisplayComponent } from '../core/error-display.component';
 import { NotificationService } from '../core/notification.service';
-import { Album, Artist, Track } from '../models/entities';
+import { Album, Artist, ArtistLookupItem, Track } from '../models/entities';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-album-editor',
@@ -18,6 +19,7 @@ import { Album, Artist, Track } from '../models/entities';
     RouterLink, FormsModule,
     MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule,
     MatAutocompleteModule, ErrorDisplayComponent,
+    JsonPipe,
   ],
   styleUrl: './album-editor.component.scss',
   template: `
@@ -57,8 +59,8 @@ import { Album, Artist, Track } from '../models/entities';
                      [matAutocomplete]="artistAc"
                      (input)="lookupArtist($event)" />
               <mat-autocomplete #artistAc (optionSelected)="selectArtist($event.option.value)">
-                @for (a of artistSuggestions(); track a.Id) {
-                  <mat-option [value]="a">{{ a.ArtistName }}</mat-option>
+                @for (a of artistSuggestions(); track a.id) {
+                  <mat-option [value]="a.name">{{ a.name }}</mat-option>
                 }
               </mat-autocomplete>
             </mat-form-field>
@@ -149,7 +151,7 @@ export class AlbumEditorComponent implements OnInit {
 
   album = signal<Album | null>(null);
   artistName = '';
-  artistSuggestions = signal<Artist[]>([]);
+  artistSuggestions = signal<ArtistLookupItem[]>([]);
   error = signal('');
   private notify = inject(NotificationService);
 
