@@ -53,7 +53,9 @@ public class AlbumTests(AlbumViewerFixture fixture)
     public async Task SaveAlbum_Create_RoundTrips()
     {
         var list = await _client.GetFromJsonAsync<JsonArray>("/api/albums");
-        var firstAlbum = list![0]!.Deserialize<JsonObject>()!;
+        var firstId = list![0]!["Id"]!.GetValue<int>();
+        // /api/albums omits Tracks (list view doesn't need them); load full detail before resubmitting
+        var firstAlbum = (await _client.GetFromJsonAsync<JsonObject>($"/api/album/{firstId}"))!;
 
         // New album: clear id so EF inserts
         firstAlbum["Id"] = 0;
@@ -78,8 +80,9 @@ public class AlbumTests(AlbumViewerFixture fixture)
     public async Task SaveAlbum_UpdateTitle_Persists()
     {
         var list = await _client.GetFromJsonAsync<JsonArray>("/api/albums");
-        var album = list![0]!.Deserialize<JsonObject>()!;
-        var id = album["Id"]!.GetValue<int>();
+        var id = list![0]!["Id"]!.GetValue<int>();
+        // /api/albums omits Tracks (list view doesn't need them); load full detail before resubmitting
+        var album = (await _client.GetFromJsonAsync<JsonObject>($"/api/album/{id}"))!;
         var originalTitle = album["Title"]!.GetValue<string>();
         var newTitle = "Updated " + Guid.NewGuid().ToString("N")[..8];
 
@@ -100,7 +103,9 @@ public class AlbumTests(AlbumViewerFixture fixture)
     {
         // Create a disposable album first
         var list = await _client.GetFromJsonAsync<JsonArray>("/api/albums");
-        var firstAlbum = list![0]!.Deserialize<JsonObject>()!;
+        var firstId = list![0]!["Id"]!.GetValue<int>();
+        // /api/albums omits Tracks (list view doesn't need them); load full detail before resubmitting
+        var firstAlbum = (await _client.GetFromJsonAsync<JsonObject>($"/api/album/{firstId}"))!;
         firstAlbum["Id"] = 0;
         firstAlbum["Title"] = "DeleteTest " + Guid.NewGuid().ToString("N")[..8];
 
@@ -148,7 +153,9 @@ public class AlbumTests(AlbumViewerFixture fixture)
     public async Task SaveAlbum_NewArtistName_AutoCreatesArtist()
     {
         var list = await _client.GetFromJsonAsync<JsonArray>("/api/albums");
-        var template = list![0]!.Deserialize<JsonObject>()!;
+        var firstId = list![0]!["Id"]!.GetValue<int>();
+        // /api/albums omits Tracks (list view doesn't need them); load full detail before resubmitting
+        var template = (await _client.GetFromJsonAsync<JsonObject>($"/api/album/{firstId}"))!;
         var uniqueArtistName = "AutoCreate " + Guid.NewGuid().ToString("N")[..8];
         template["Id"] = 0;
         template["Title"] = "AutoArtistTest " + Guid.NewGuid().ToString("N")[..8];
@@ -173,9 +180,11 @@ public class AlbumTests(AlbumViewerFixture fixture)
     [Fact]
     public async Task DeleteAlbum_TracksAreRemoved()
     {
-        // Create a disposable album with at least one track
+        // Create a disposable album with at least one track — /api/albums omits Tracks
+        // (list view doesn't need them), so load full detail before resubmitting
         var list = await _client.GetFromJsonAsync<JsonArray>("/api/albums");
-        var template = list!.First(a => a!["Tracks"]!.AsArray().Count > 0)!.Deserialize<JsonObject>()!;
+        var firstId = list![0]!["Id"]!.GetValue<int>();
+        var template = (await _client.GetFromJsonAsync<JsonObject>($"/api/album/{firstId}"))!;
         template["Id"] = 0;
         template["Title"] = "TrackDeleteTest " + Guid.NewGuid().ToString("N")[..8];
 

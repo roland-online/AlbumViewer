@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using AlbumViewerBusiness;
 
 namespace AlbumViewer.Tests;
 
@@ -53,8 +54,14 @@ public class ArtistTests(AlbumViewerFixture fixture)
         var response = await _client.GetAsync("/api/artistlookup?search=the");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var results = await response.Content.ReadFromJsonAsync<JsonArray>();
+        var results = await response.Content.ReadFromJsonAsync<List<ArtistLookupItem>>();
         Assert.NotNull(results);
+        Assert.NotEmpty(results);
+        Assert.All(results, r =>
+        {
+            Assert.True(r.id > 0, "ArtistLookupItem.id must be the artist's real numeric Id, not the name");
+            Assert.False(string.IsNullOrEmpty(r.name));
+        });
     }
 
     [Fact]
@@ -134,9 +141,11 @@ public class ArtistTests(AlbumViewerFixture fixture)
     [Fact]
     public async Task DeleteArtist_CascadesAlbumsAndTracks()
     {
-        // Get a seeded album that has tracks — use it as a template for a disposable artist+album
+        // Get a seeded album — use it as a template for a disposable artist+album.
+        // /api/albums omits Tracks (list view doesn't need them), so load full detail before resubmitting.
         var list = await _client.GetFromJsonAsync<JsonArray>("/api/albums");
-        var template = list!.First(a => a!["Tracks"]!.AsArray().Count > 0)!.Deserialize<JsonObject>()!;
+        var firstId = list![0]!["Id"]!.GetValue<int>();
+        var template = (await _client.GetFromJsonAsync<JsonObject>($"/api/album/{firstId}"))!;
 
         // Save as new album under a new unique artist name
         template["Id"] = 0;

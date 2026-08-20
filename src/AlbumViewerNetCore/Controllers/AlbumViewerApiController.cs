@@ -233,10 +233,10 @@ namespace AlbumViewerAspNetCore
         /// <param name="search"></param>
         /// <returns></returns>
         [HttpGet("api/artistlookup")]
-        public async Task<IEnumerable<object>> ArtistLookup(string search = null)
+        public async Task<List<ArtistLookupItem>> ArtistLookup(string search = null)
         {
             if (string.IsNullOrEmpty(search))
-                return new List<object>();
+                return new List<ArtistLookupItem>();
 
             var repo = new ArtistRepository(context);
             var term = search.ToLower();

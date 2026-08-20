@@ -64,7 +64,7 @@ public class ArtistRepository : EntityFrameworkBusinessObject<AlbumViewerContext
             .Select(a => new ArtistLookupItem
             {
                 name = a.ArtistName,
-                id = a.ArtistName
+                id = a.Id
             })
             .ToListAsync();
     }
@@ -122,6 +122,6 @@ public class ArtistRepository : EntityFrameworkBusinessObject<AlbumViewerContext
     public class ArtistLookupItem
     {
         public string name { get; set; }
-        public string id { get; set; }
+        public int id { get; set; }
     }
 }
