@@ -27,7 +27,7 @@ export interface ArtistResult {
 }
 
 export interface ArtistLookupItem {
-  id: string;
+  id: number;
   name: string;
 }
 

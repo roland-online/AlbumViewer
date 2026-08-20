@@ -60,7 +60,7 @@ import { JsonPipe } from '@angular/common';
                      (input)="lookupArtist($event)" />
               <mat-autocomplete #artistAc (optionSelected)="selectArtist($event.option.value)">
                 @for (a of artistSuggestions(); track a.id) {
-                  <mat-option [value]="a.name">{{ a.name }}</mat-option>
+                  <mat-option [value]="a">{{ a.name }}</mat-option>
                 }
               </mat-autocomplete>
             </mat-form-field>
@@ -179,11 +179,11 @@ export class AlbumEditorComponent implements OnInit {
     this.artistService.lookupArtists(q).subscribe(list => this.artistSuggestions.set(list));
   }
 
-  selectArtist(artist: Artist) {
-    this.artistName = artist.ArtistName;
+  selectArtist(item: ArtistLookupItem) {
+    this.artistName = item.name;
     const a = this.album()!;
-    a.ArtistId = artist.Id;
-    a.Artist = artist;
+    a.ArtistId = item.id;
+    a.Artist = { ...(a.Artist ?? {} as Artist), Id: item.id, ArtistName: item.name };
   }
 
   addTrack() { this.albumService.addTrack(); }
