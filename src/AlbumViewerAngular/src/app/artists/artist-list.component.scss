@@ -4,43 +4,37 @@
   gap: 16px;
   padding: 16px 24px 0;
 
-  .search-field { width: 320px; }
-
   .count {
-    color: rgba(0, 0, 0, 0.54);
+    color: var(--mat-sys-on-surface-variant);
     font-size: 0.875rem;
   }
 }
 
-.artist-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
-  padding: 16px 24px 24px;
+.artist-list {
+  padding: 8px 0;
 }
 
-.artist-card {
+.artist-row {
   cursor: pointer;
-  transition: box-shadow 0.2s;
 
-  &:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+  .artist-icon { color: var(--mat-sys-primary); }
 
-  img[mat-card-image] {
-    height: 160px;
-    object-fit: cover;
-    object-position: top;
+  .artist-count {
+    font-size: 0.75rem;
+    padding: 0 12px 0 8px;
+    color: var(--mat-sys-on-surface-variant);
   }
 
   .artist-name {
-    font-weight: 500;
-    font-size: 0.875rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    flex: 1;
+    font-size: 1rem;
   }
 
-  .album-count {
-    font-size: 0.75rem;
-    color: rgba(0, 0, 0, 0.4);
+  .artist-thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    object-fit: cover;
+    object-position: top;
   }
 }

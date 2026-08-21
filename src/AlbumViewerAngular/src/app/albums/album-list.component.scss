@@ -9,7 +9,7 @@
   }
 
   .count {
-    color: rgba(0, 0, 0, 0.54);
+    color: var(--mat-sys-on-surface-variant);
     font-size: 0.875rem;
   }
 }
@@ -26,7 +26,7 @@
   transition: box-shadow 0.2s;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px var(--mat-sys-shadow);
   }
 
   img[mat-card-image] {
@@ -44,7 +44,7 @@
 
   .album-artist {
     font-size: 0.8rem;
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--mat-sys-on-surface-variant);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -52,6 +52,6 @@
 
   .album-year {
     font-size: 0.75rem;
-    color: rgba(0, 0, 0, 0.4);
+    color: var(--mat-sys-outline);
   }
 }

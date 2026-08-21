@@ -26,21 +26,6 @@ import { NO_COVER_SVG } from '../core/no-cover';
       </span>
     </div>
 
-    <!-- this div being replaced by mat-list below -->
-    <div class="artist-list" style="display: none;">
-      @for (artist of filtered(); track artist.Id) {
-        <div class="artist-row" (click)="open(artist)" role="button">
-          <mat-icon class="artist-icon">group</mat-icon>
-          <span class="artist-count">{{ artist.AlbumCount }}</span>
-          <span class="artist-name">{{ artist.ArtistName }}</span>
-          <img [src]="artist.ImageUrl || noCover"
-               [alt]="artist.ArtistName"
-               class="artist-thumb"
-               (error)="onImgError($event)" />
-        </div>
-      }
-    </div>
-
     <mat-list class="artist-list">
       @for (artist of filtered(); track artist.Id) {
         <mat-list-item class="artist-row" (click)="open(artist)" role="button">
