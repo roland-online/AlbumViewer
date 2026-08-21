@@ -5,6 +5,8 @@ import { AlbumEditorComponent } from './albums/album-editor.component';
 import { ArtistListComponent } from './artists/artist-list.component';
 import { ArtistDetailComponent } from './artists/artist-detail.component';
 import { ArtistEditorComponent } from './artists/artist-editor.component';
+import { OptionsComponent } from './options/options.component';
+import { AboutComponent } from './options/about.component';
 import { LoginComponent } from './auth/login.component';
 import { authGuard } from './core/auth.guard';
 
@@ -16,6 +18,8 @@ export const routes: Routes = [
   { path: 'album/:id', component: AlbumDetailComponent },
   { path: 'artist/edit/:id', component: ArtistEditorComponent, canActivate: [authGuard] },
   { path: 'artist/:id', component: ArtistDetailComponent },
+  { path: 'options', component: OptionsComponent },
+  { path: 'about', component: AboutComponent },
   { path: 'login', component: LoginComponent },
 ];
 

@@ -4,10 +4,6 @@
   gap: 16px;
   padding: 16px 24px 0;
 
-  .search-field {
-    width: 320px;
-  }
-
   .count {
     color: var(--mat-sys-on-surface-variant);
     font-size: 0.875rem;
@@ -15,43 +11,58 @@
 }
 
 .album-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
   padding: 16px 24px 24px;
 }
 
-.album-card {
+.album {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
   cursor: pointer;
-  transition: box-shadow 0.2s;
 
-  &:hover {
-    box-shadow: 0 4px 12px var(--mat-sys-shadow);
+  &:last-child { border-bottom: none; }
+
+  .album-overlay {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    display: flex;
+    gap: 8px;
+
+    a {
+      cursor: pointer;
+      color: var(--mat-sys-on-surface-variant);
+      &:hover { color: var(--mat-sys-primary); }
+    }
   }
 
-  img[mat-card-image] {
-    height: 180px;
+  .album-image {
+    width: 55px;
+    height: 55px;
     object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
   }
 
-  .album-title {
-    font-weight: 500;
-    font-size: 0.875rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  .album-info {
+    flex: 1;
+    padding-right: 64px;
 
-  .album-artist {
-    font-size: 0.8rem;
-    color: var(--mat-sys-on-surface-variant);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+    .album-title { font-weight: 500; }
 
-  .album-year {
-    font-size: 0.75rem;
-    color: var(--mat-sys-outline);
+    .album-artist {
+      font-size: 0.85rem;
+      color: var(--mat-sys-on-surface-variant);
+    }
+
+    .album-descript {
+      font-size: 0.8rem;
+      color: var(--mat-sys-on-surface-variant);
+      max-height: 3em;
+      overflow: hidden;
+    }
   }
 }

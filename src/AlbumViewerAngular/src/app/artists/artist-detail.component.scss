@@ -3,6 +3,12 @@
   max-width: 960px;
 }
 
+.btn-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
 .artist-header {
   display: flex;
   gap: 24px;
@@ -12,53 +18,79 @@
     width: 160px;
     height: 160px;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 4px;
     flex-shrink: 0;
   }
 
   .artist-info {
     flex: 1;
     h1 { margin: 0 0 8px; }
-    p { color: rgba(0, 0, 0, 0.6); margin: 0 0 16px; }
+    .description { color: var(--mat-sys-on-surface-variant); margin: 0 0 12px; }
   }
 
-  .header-actions {
-    display: flex;
-    gap: 8px;
+  .media-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.875rem;
   }
 }
 
 h2 { margin: 0 0 12px; }
 
-.album-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+.album-list { padding: 0; }
+
+.album {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
   gap: 16px;
-}
-
-.album-card {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
   cursor: pointer;
-  transition: box-shadow 0.2s;
 
-  &:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+  &:last-child { border-bottom: none; }
 
-  img[mat-card-image] {
-    height: 160px;
+  .album-overlay {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    display: flex;
+    gap: 8px;
+
+    a {
+      cursor: pointer;
+      color: var(--mat-sys-on-surface-variant);
+      &:hover { color: var(--mat-sys-primary); }
+    }
+  }
+
+  .album-image {
+    width: 55px;
+    height: 55px;
     object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
   }
 
-  .album-title {
-    font-size: 0.875rem;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  .album-info {
+    flex: 1;
+    padding-right: 64px;
 
-  .album-year {
-    font-size: 0.75rem;
-    color: rgba(0, 0, 0, 0.4);
+    .album-title { font-weight: 500; }
+
+    .album-artist {
+      font-size: 0.85rem;
+      color: var(--mat-sys-on-surface-variant);
+    }
+
+    .album-descript {
+      font-size: 0.8rem;
+      color: var(--mat-sys-on-surface-variant);
+      max-height: 3em;
+      overflow: hidden;
+    }
   }
 }
 
-.loading { padding: 24px; }
+.add-album-btn { margin-top: 24px; }
