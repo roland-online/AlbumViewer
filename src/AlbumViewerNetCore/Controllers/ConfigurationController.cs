@@ -53,31 +53,20 @@ namespace AlbumViewerNetCore.Controllers
         /// </summary>
         /// <returns></returns>
 	    [HttpGet("api/applicationstats")]
-        public object GetApplicationStats()
+        public ApplicationStats GetApplicationStats()
         {
-            
-            //var rt = typeof(IHostingEnvironment)
-            //    .GetTypeInfo()
-            //    .Assembly
-            //    .GetCustomAttribute<AssemblyFileVersionAttribute>();
-            //var v = new Version(rt.Version);
-
-            var vname = Assembly.GetEntryAssembly()?.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName;
-
             string pgConnStr = RawConfiguration.GetConnectionString("AlbumViewer");
             string useSqLite = RawConfiguration["Data:useSqLite"];
             string dataMode = !string.IsNullOrEmpty(pgConnStr) ? "PostgreSQL"
                               : useSqLite == "true" ? "SqLite"
                               : "Sql Server";
 
-            var stats = new
+            return new ApplicationStats
             {
                 OsPlatform = System.Runtime.InteropServices.RuntimeInformation.OSDescription,
                 AspDotnetVersion = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription,
                 DataMode = dataMode
             };
-
-            return stats;
         }
 
 

@@ -80,7 +80,13 @@ export class OptionsComponent implements OnInit {
 
   ngOnInit() {
     this.http.get<ApplicationStats>(this.config.url('applicationStats'))
-      .subscribe({ next: s => this.stats.set(s), error: () => {} });
+      .subscribe({
+        next: s => {
+          s.AngularVersion = document.querySelector('[ng-version]')?.getAttribute('ng-version') ?? s.AngularVersion;
+          this.stats.set(s);
+        },
+        error: () => {}
+      });
   }
 
   reloadData() {

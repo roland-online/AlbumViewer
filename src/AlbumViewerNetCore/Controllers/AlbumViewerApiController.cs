@@ -169,7 +169,7 @@ namespace AlbumViewerAspNetCore
         /// <returns></returns>
         [HttpGet]
         [Route("api/artists")]
-        public async Task<IEnumerable> GetArtists()
+        public async Task<IEnumerable<Artist>> GetArtists()
         {
             return await ArtistRepo.GetAllArtists();
         }
@@ -181,7 +181,7 @@ namespace AlbumViewerAspNetCore
         /// <returns></returns>
         /// <exception cref="ApiException"></exception>
         [HttpGet("api/artist/{id:int}")]
-        public async Task<object> Artist(int id)
+        public async Task<ArtistResponse> Artist(int id)
         {
             var artist = await ArtistRepo.LoadAsync(id);
 
@@ -345,8 +345,15 @@ drop table Users;
     public class ArtistResponse
     {
         public Artist Artist { get; set; }
-
         public List<Album> Albums { get; set; }
+    }
+
+    public class ApplicationStats
+    {
+        public string OsPlatform { get; set; }
+        public string AspDotnetVersion { get; set; }
+        public string AngularVersion { get; set; }
+        public string DataMode { get; set; }
     }
 
     #endregion
