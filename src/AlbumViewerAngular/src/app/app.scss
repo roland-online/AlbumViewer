@@ -1,5 +1,7 @@
 .toolbar-spacer { flex: 1; }
 
+// main scroll container is styled in themes/strahl.scss (fixed, below toolbar).
+// Default (no skin): provide a basic top offset so content isn't hidden under the toolbar.
 main {
-  min-height: calc(100vh - 64px);
+  padding-top: 64px;
 }
