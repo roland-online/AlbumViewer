@@ -4,9 +4,16 @@
   gap: 16px;
   padding: 16px 24px 0;
 
-  .count {
-    color: var(--mat-sys-on-surface-variant);
-    font-size: 0.875rem;
+  .badge-count {
+    display: inline-block;
+    background: #dc3545;
+    color: white;
+    font-size: 0.6em;
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: 4px;
+    vertical-align: super;
+    margin-left: 2px;
   }
 }
 

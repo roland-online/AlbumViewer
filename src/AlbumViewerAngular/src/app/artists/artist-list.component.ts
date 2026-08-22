@@ -20,10 +20,10 @@ import { NO_COVER_SVG } from '../core/no-cover';
     <app-error-display [error]="errorMsg()" (dismiss)="errorMsg.set('')" />
 
     <div class="list-header">
-      <span class="page-header-text">
-        <mat-icon>group</mat-icon> Artists
-        <span class="count">{{ filtered().length }}</span>
-      </span>
+      <div class="page-header-text">
+        <mat-icon>list</mat-icon> Artists
+        <span class="badge-count">{{ filtered().length }}</span>
+      </div>
     </div>
 
     <mat-list class="artist-list">

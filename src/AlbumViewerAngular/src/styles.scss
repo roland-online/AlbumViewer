@@ -43,3 +43,20 @@ body {
 .snack-success { background: #e8f5e9; }
 .snack-error .mat-mdc-snack-bar-label { color: #b71c1c; }
 .snack-error { background: #ffebee; }
+
+.page-header-text {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--av-page-header-color, var(--mat-sys-primary));
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.separator {
+  padding: 3px 0;
+  margin: 10px 0 15px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.line-breaks { white-space: pre-wrap; }

@@ -22,15 +22,16 @@ import { NO_COVER_SVG } from '../core/no-cover';
     <app-error-display [error]="errorMsg()" (dismiss)="errorMsg.set('')" />
 
     <div class="list-header">
-      <span class="page-header-text">
-        <mat-icon>album</mat-icon> Albums
-        <span class="count">{{ filtered().length }}</span>
-      </span>
+      <div class="page-header-text">
+        <span class="header-icon material-icons">view_list</span> Albums
+        <span class="badge-count">{{ filtered().length }}</span>
+      </div>
       @if (auth.isAuthenticated()) {
         <a mat-flat-button routerLink="/album/edit/0" class="add-btn">
-          <mat-icon>add</mat-icon> Add Album
+          <span class="material-icons">add</span> Add Album
         </a>
       }
+      <hr class="header-rule" />
     </div>
 
     <div class="album-grid">
@@ -39,23 +40,25 @@ import { NO_COVER_SVG } from '../core/no-cover';
           @if (auth.isAuthenticated()) {
             <div class="album-overlay" (click)="$event.stopPropagation()">
               <a [routerLink]="['/album/edit', album.Id]">
-                <mat-icon>edit</mat-icon>
+                <mat-icon>edit_note</mat-icon>
               </a>
               <a (click)="deleteAlbum(album)">
-                <mat-icon>close</mat-icon>
+                <mat-icon>delete_forever</mat-icon>
               </a>
             </div>
           }
-          <img [src]="album.ImageUrl || noCover"
-               [alt]="album.Title"
-               class="album-image"
-               (error)="onImgError($event)" />
-          <div class="album-info">
-            <div class="album-title">{{ album.Title }}</div>
-            <div class="album-artist">by <b>{{ album.Artist?.ArtistName }}</b>
-              {{ album.Year ? 'in ' + album.Year : '' }}
+          <div class="album-body">
+            <img [src]="album.ImageUrl || noCover"
+                 [alt]="album.Title"
+                 class="album-image"
+                 (error)="onImgError($event)" />
+            <div class="album-info">
+              <div class="album-title">{{ album.Title }}</div>
+              <div class="album-artist">by <b>{{ album.Artist?.ArtistName }}</b>
+                {{ album.Year ? 'in ' + album.Year : '' }}
+              </div>
+              <div class="album-descript">{{ album.Description }}</div>
             </div>
-            <div class="album-descript">{{ album.Description }}</div>
           </div>
         </div>
       }

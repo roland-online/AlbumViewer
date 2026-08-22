@@ -55,7 +55,7 @@ h2 { margin: 0 0 12px; }
     position: absolute;
     top: 10px;
     right: 0;
-    display: flex;
+    display: none; // shown on :hover via strahl.scss; default skin keeps it hidden
     gap: 8px;
 
     a {
@@ -65,11 +65,13 @@ h2 { margin: 0 0 12px; }
     }
   }
 
+  &:hover .album-overlay { display: flex; }
+
   .album-image {
     width: 55px;
     height: 55px;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: var(--av-album-image-radius, 4px);
     flex-shrink: 0;
   }
 

@@ -3,6 +3,14 @@
 // All Strahl-specific colour and decorative values live here; component SCSS files
 // reference var(--av-*) only — no Strahl values are hardcoded in component files.
 
+// Restore fork_root's 16px base and Segoe UI font so rem/em units and typography match parity
+html { font-size: 16px; }
+body {
+  font-size: 16px !important;
+  font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  letter-spacing: 0.7px;
+}
+
 :root {
   // Banner / toolbar
   --av-banner-bg: #535353;
@@ -16,6 +24,7 @@
   --av-album-title-color: #444;
   --av-album-artist-color: #2a5fb4;
   --av-album-overlay-bg: #034e8d;
+  --av-album-image-radius: 35px;
 
   // Artist list
   --av-artist-icon-color: steelblue;
@@ -198,6 +207,75 @@ mat-toolbar.mat-toolbar {
   }
 }
 
+// ── Add Album / Add Artist buttons (C.2, C.4) — green to match Bootstrap btn-success ──
+
+app-album-list .add-btn,
+app-artist-list .add-btn,
+app-artist-detail .add-btn {
+  background-color: #28a745 !important;
+  color: white !important;
+  border: 1px solid #1e7e34 !important;
+  border-radius: 4px !important;
+  padding: 0 8px !important;
+  min-width: unset !important;
+  line-height: 37px !important;
+  height: 37px !important;
+  font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  &:hover { background-color: #218838 !important; }
+  .mdc-button__label { line-height: 37px; }
+}
+
+// ── Album list items (C.2) — also used in artist detail (C.5) ─────────────
+// Targets app-album-list and app-artist-detail; both use the same .album/.album-* structure.
+
+app-album-list, app-artist-detail {
+  .album {
+    transition: background linear 375ms;
+
+    &:hover {
+      background: var(--av-album-hover-bg);
+      color: white;
+
+      .album-overlay { display: flex; }
+    }
+
+    .album-title {
+      font-weight: bold;
+      color: var(--av-album-title-color);
+    }
+
+    .album-artist {
+      font-style: italic;
+      color: var(--av-album-artist-color);
+    }
+
+    .album-descript { max-height: 83px; }
+
+    .album-overlay {
+      background: var(--av-album-overlay-bg);
+      color: whitesmoke;
+      padding: 5px;
+      border-radius: 3px;
+      opacity: 0.85;
+      box-shadow: 2px 2px 4px var(--av-banner-bg);
+
+      &:hover { opacity: 1; }
+
+      a, a:hover { color: beige; text-decoration: none; }
+      a:hover { color: white; }
+    }
+  }
+}
+
+// ── Artist detail image (C.5) ──────────────────────────────────────────────
+
+app-artist-detail {
+  .artist-img {
+    border-radius: 4px;
+    box-shadow: 2px 2px 4px var(--av-banner-bg);
+  }
+}
+
 // ── Main content area ──────────────────────────────────────────────────────
 
 // Push main below the fixed toolbar and make it the scroll container
@@ -211,6 +289,6 @@ main {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   background: white;
-  padding-top: 10px;
+  padding-top: 10px !important; // resets app.scss 64px no-skin fallback
   box-sizing: border-box;
 }
