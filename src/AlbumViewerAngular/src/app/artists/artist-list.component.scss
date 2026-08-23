@@ -1,14 +1,37 @@
 .list-header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 24px 0;
+  column-gap: 16px;
+  row-gap: 0;
+  padding: 4px 24px 12px;
+  flex-wrap: wrap;
+
+  hr.header-rule {
+    flex-basis: 100%;
+    border: none;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+    margin: 12px 0 0;
+  }
+}
+
+.page-header-text {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--av-page-header-color, var(--mat-sys-primary));
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  .header-icon {
+    font-size: inherit;
+    line-height: 1;
+  }
 
   .badge-count {
     display: inline-block;
-    background: #dc3545;
+    background: var(--av-badge-count-bg, #dc3545);
     color: white;
-    font-size: 0.6em;
+    font-size: 0.43em;
     font-weight: 600;
     padding: 1px 5px;
     border-radius: 4px;
@@ -17,30 +40,54 @@
   }
 }
 
+.artist-list-wrap {
+  padding: 0 24px;
+}
+
 .artist-list {
-  padding: 8px 0;
+  padding: 0;
+  --mat-list-active-indicator-color: transparent;
+  --mat-list-active-indicator-shape: 0;
+  --mat-list-list-item-leading-padding: 0px;
+  --mat-list-list-item-trailing-padding: 0px;
+  --mat-list-list-item-one-line-container-height: 64px;
 }
 
 .artist-row {
-  cursor: pointer;
+  cursor: pointer !important;
+  border-bottom: 1px solid var(--mat-sys-outline-variant) !important;
 
-  .artist-icon { color: var(--mat-sys-primary); }
+  .artist-icon {
+    color: var(--av-artist-icon-color, var(--mat-sys-primary));
+    font-size: 20px;
+  }
+
+  .artist-body {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+  }
 
   .artist-count {
-    font-size: 0.75rem;
-    padding: 0 12px 0 8px;
-    color: var(--mat-sys-on-surface-variant);
+    display: inline-block;
+    background: var(--av-artist-count-bg, #17a2b8);
+    color: white;
+    font-size: 0.7em;
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: 4px;
+    white-space: nowrap;
   }
 
   .artist-name {
-    flex: 1;
-    font-size: 1rem;
+    font-size: 1.1em;
   }
 
   .artist-thumb {
     width: 40px;
     height: 40px;
-    border-radius: 4px;
+    border-radius: 3px;
     object-fit: cover;
     object-position: top;
   }

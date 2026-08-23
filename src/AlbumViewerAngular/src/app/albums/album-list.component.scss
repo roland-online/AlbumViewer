@@ -33,7 +33,7 @@
 
   .badge-count {
     display: inline-block;
-    background: #dc3545;
+    background: var(--av-badge-count-bg, #dc3545);
     color: white;
     font-size: 0.43em;
     font-weight: 600;

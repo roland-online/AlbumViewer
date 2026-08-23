@@ -57,7 +57,7 @@ import { ApplicationStats } from '../models/entities';
 
       <div class="options-section">
         @if (auth.isAuthenticated()) {
-          <button mat-stroked-button (click)="auth.logout()">
+          <button mat-stroked-button (click)="logout()">
             <mat-icon>lock</mat-icon> Sign out
           </button>
         } @else {
@@ -87,6 +87,10 @@ export class OptionsComponent implements OnInit {
         },
         error: () => {}
       });
+  }
+
+  logout() {
+    this.auth.logout().subscribe();
   }
 
   reloadData() {

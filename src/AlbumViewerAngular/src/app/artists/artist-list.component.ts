@@ -1,6 +1,5 @@
 import { Component, inject, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatListModule } from '@angular/material/list';
 import { ArtistService } from '../services/artist.service';
@@ -11,7 +10,7 @@ import { NO_COVER_SVG } from '../core/no-cover';
 
 @Component({
   selector: 'app-artist-list',
-  imports: [MatIconModule, MatProgressBarModule, MatListModule, ErrorDisplayComponent],
+  imports: [MatProgressBarModule, MatListModule, ErrorDisplayComponent],
   styleUrl: './artist-list.component.scss',
   template: `
     @if (loading()) {
@@ -21,24 +20,30 @@ import { NO_COVER_SVG } from '../core/no-cover';
 
     <div class="list-header">
       <div class="page-header-text">
-        <mat-icon>list</mat-icon> Artists
+        <span class="header-icon material-icons">view_list</span> Artists
         <span class="badge-count">{{ filtered().length }}</span>
       </div>
+      <hr class="header-rule" />
     </div>
 
-    <mat-list class="artist-list">
-      @for (artist of filtered(); track artist.Id) {
-        <mat-list-item class="artist-row" (click)="open(artist)" role="button">
-          <mat-icon class="artist-icon">group</mat-icon>
-          <span class="artist-count">{{ artist.AlbumCount }}</span>
-          <span class="artist-name">{{ artist.ArtistName }}</span>
-          <img [src]="artist.ImageUrl || noCover"
-               [alt]="artist.ArtistName"
-               class="artist-thumb"
-               (error)="onImgError($event)" />
-        </mat-list-item>
-      }
-    </mat-list>
+    <div class="artist-list-wrap">
+      <mat-nav-list class="artist-list">
+        @for (artist of filtered(); track artist.Id) {
+          <mat-list-item class="artist-row" (click)="open(artist)">
+            <span matListItemIcon class="artist-icon material-icons">groups</span>
+            <span class="artist-body">
+              <span class="artist-count">{{ artist.AlbumCount }}</span>
+              <span class="artist-name">{{ artist.ArtistName }}</span>
+            </span>
+            <img matListItemMeta
+                 [src]="artist.ImageUrl || noCover"
+                 [alt]="artist.ArtistName"
+                 class="artist-thumb"
+                 (error)="onImgError($event)" />
+          </mat-list-item>
+        }
+      </mat-nav-list>
+    </div>
   `,
 })
 export class ArtistListComponent implements OnInit, OnDestroy {

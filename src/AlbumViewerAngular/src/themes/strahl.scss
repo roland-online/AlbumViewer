@@ -28,9 +28,11 @@ body {
 
   // Artist list
   --av-artist-icon-color: steelblue;
+  --av-artist-count-bg: #17a2b8;
 
   // Page headers
   --av-page-header-color: #0092d0;
+  --av-badge-count-bg: #dc3545;
 }
 
 // ── Toolbar ────────────────────────────────────────────────────────────────
@@ -271,7 +273,6 @@ app-album-list, app-artist-detail {
 
 app-artist-detail {
   .artist-img {
-    border-radius: 4px;
     box-shadow: 2px 2px 4px var(--av-banner-bg);
   }
 }
