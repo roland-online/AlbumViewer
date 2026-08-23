@@ -59,7 +59,7 @@
 
   .artist-icon {
     color: var(--av-artist-icon-color, var(--mat-sys-primary));
-    font-size: 20px;
+    font-size: var(--av-artist-icon-size, 24px);
   }
 
   .artist-body {
@@ -81,13 +81,13 @@
   }
 
   .artist-name {
-    font-size: 1.1em;
+    font-size: var(--av-artist-name-size, 1em);
   }
 
   .artist-thumb {
     width: 40px;
     height: 40px;
-    border-radius: 3px;
+    border-radius: var(--av-artist-thumb-radius, 4px);
     object-fit: cover;
     object-position: top;
   }

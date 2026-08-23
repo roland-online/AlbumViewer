@@ -19,20 +19,23 @@ import { NO_COVER_SVG } from '../core/no-cover';
     @if (artist()) {
       <div class="artist-layout">
         <div class="btn-group" role="group">
-          <a mat-stroked-button routerLink="/artists">
-            <mat-icon>group</mat-icon> Artists
+          <a mat-flat-button routerLink="/artists">
+            <span class="material-icons">view_list</span> Artists
           </a>
           @if (auth.isAuthenticated()) {
-            <button mat-stroked-button (click)="edit()">
-              <mat-icon>edit</mat-icon> Edit
+            <button mat-flat-button (click)="edit()">
+              <span class="material-icons">edit_note</span> Edit
             </button>
-            <button mat-stroked-button color="warn" (click)="remove()">
-              <mat-icon>delete</mat-icon> Delete
+            <button mat-flat-button (click)="remove()">
+              <span class="material-icons">delete_forever</span> Delete
             </button>
           }
         </div>
 
         <app-error-display [error]="errorMsg()" (dismiss)="errorMsg.set('')" />
+
+        <h2 class="artist-name">{{ artist()!.ArtistName }}</h2>
+        <hr class="separator" />
 
         <div class="artist-header">
           <img [src]="artist()!.ImageUrl || noCover"
@@ -40,7 +43,6 @@ import { NO_COVER_SVG } from '../core/no-cover';
                (error)="onImgError($event)"
                class="artist-img" />
           <div class="artist-info">
-            <h1>{{ artist()!.ArtistName }}</h1>
             <div class="description line-breaks">{{ artist()!.Description }}</div>
             @if (artist()!.AmazonUrl) {
               <a [href]="artist()!.AmazonUrl" target="_blank" class="media-link">
@@ -52,35 +54,37 @@ import { NO_COVER_SVG } from '../core/no-cover';
 
         <h2>Albums ({{ artist()!.Albums?.length }})</h2>
 
-        <div class="album-list">
+        <div class="album-grid">
           @for (album of artist()!.Albums; track album.Id) {
             <div class="album" (click)="openAlbum(album)">
               @if (auth.isAuthenticated()) {
                 <div class="album-overlay" (click)="$event.stopPropagation()">
                   <a [routerLink]="['/album/edit', album.Id]">
-                    <mat-icon>edit</mat-icon>
+                    <mat-icon>edit_note</mat-icon>
                   </a>
                   <a (click)="deleteAlbum(album)">
-                    <mat-icon>close</mat-icon>
+                    <mat-icon>delete_forever</mat-icon>
                   </a>
                 </div>
               }
-              <img [src]="album.ImageUrl || noCover"
-                   [alt]="album.Title"
-                   class="album-image"
-                   (error)="onImgError($event)" />
-              <div class="album-info">
-                <div class="album-title">{{ album.Title }}</div>
-                <div class="album-artist">{{ album.Year ? 'in ' + album.Year : '' }}</div>
-                <div class="album-descript">{{ album.Description }}</div>
+              <div class="album-body">
+                <img [src]="album.ImageUrl || noCover"
+                     [alt]="album.Title"
+                     class="album-image"
+                     (error)="onImgError($event)" />
+                <div class="album-info">
+                  <div class="album-title">{{ album.Title }}</div>
+                  <div class="album-artist">{{ album.Year ? 'in ' + album.Year : '' }}</div>
+                  <div class="album-descript">{{ album.Description }}</div>
+                </div>
               </div>
             </div>
           }
         </div>
 
         <div class="add-album-btn">
-          <button mat-flat-button (click)="addAlbum()">
-            <mat-icon>add</mat-icon> Add Album
+          <button mat-flat-button class="add-btn" (click)="addAlbum()">
+            <span class="material-icons">add</span> Add Album
           </button>
         </div>
       </div>

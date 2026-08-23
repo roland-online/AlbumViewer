@@ -1,18 +1,26 @@
-.artist-layout {
-  padding: 24px;
-  max-width: 960px;
+.artist-name {
+  font-size: var(--av-artist-name-size-h, 2rem);
+  font-weight: 600;
+  line-height: var(--av-heading-line-height, normal);
+  margin: 0 0 var(--av-artist-name-margin-bottom, 8px);
+}
+
+hr.separator {
+  border: none;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  margin: 0 0 var(--av-separator-margin-bottom, 12px);
 }
 
 .btn-group {
   display: flex;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: var(--av-btn-group-margin-bottom, 12px);
 }
 
 .artist-header {
   display: flex;
   gap: 24px;
-  margin-bottom: 24px;
+  margin-bottom: var(--av-artist-header-margin-bottom, 16px);
 
   .artist-img {
     width: 97%;
@@ -25,8 +33,7 @@
 
   .artist-info {
     flex: 1;
-    h1 { margin: 0 0 8px; }
-    .description { color: var(--mat-sys-on-surface-variant); margin: 0 0 12px; }
+    .description { color: var(--mat-sys-on-surface-variant); margin: 0 0 12px; line-height: 1.5; }
   }
 
   .media-link {
@@ -37,36 +44,57 @@
   }
 }
 
-h2 { margin: 0 0 12px; }
+h2 {
+  font-size: var(--av-h2-size, 1.5rem);
+  font-weight: 600;
+  line-height: var(--av-heading-line-height, normal);
+  margin: 0 0 var(--av-h2-margin-bottom, 8px);
+}
 
-.album-list { padding: 0; }
+.album-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 5px;
+  padding: 0 0 24px;
+}
 
 .album {
   position: relative;
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  overflow: hidden;
+  padding: 10px;
+  border: 1px solid var(--av-album-tile-border, var(--mat-sys-outline-variant));
+  border-radius: 6px;
   cursor: pointer;
+  box-sizing: border-box;
+  width: calc((100% - 10px) / 3);
+  height: 165px;
 
-  &:last-child { border-bottom: none; }
+  @media (max-width: 960px) { width: calc((100% - 5px) / 2); }
+  @media (max-width: 580px) { width: 100%; height: auto; min-height: 120px; }
 
   .album-overlay {
     position: absolute;
-    top: 10px;
+    top: 0;
     right: 0;
-    display: none; // shown on :hover via strahl.scss; default skin keeps it hidden
-    gap: 8px;
+    display: none;
+    gap: 4px;
+    padding: 5px;
+    border-radius: 3px;
 
     a {
       cursor: pointer;
-      color: var(--mat-sys-on-surface-variant);
-      &:hover { color: var(--mat-sys-primary); }
+      color: var(--av-album-overlay-link, var(--mat-sys-on-surface));
+      &:hover { color: var(--av-album-overlay-link-hover, var(--mat-sys-primary)); }
     }
   }
 
   &:hover .album-overlay { display: flex; }
+
+  .album-body {
+    display: flex;
+    gap: 8px;
+    height: 100%;
+  }
 
   .album-image {
     width: 55px;
@@ -74,11 +102,14 @@ h2 { margin: 0 0 12px; }
     object-fit: cover;
     border-radius: var(--av-album-image-radius, 4px);
     flex-shrink: 0;
+    align-self: flex-start;
+
+    @media (min-width: 960px) { width: 70px; height: 70px; }
   }
 
   .album-info {
     flex: 1;
-    padding-right: 64px;
+    overflow: hidden;
 
     .album-title {
       font-size: 1rem;
@@ -100,6 +131,10 @@ h2 { margin: 0 0 12px; }
       color: var(--mat-sys-on-surface-variant);
       overflow: hidden;
     }
+  }
+
+  &:hover .album-info {
+    .album-descript { color: var(--av-album-hover-descript, inherit); }
   }
 }
 
