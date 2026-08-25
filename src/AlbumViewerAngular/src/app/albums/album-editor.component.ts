@@ -24,26 +24,27 @@ import { JsonPipe } from '@angular/common';
   styleUrl: './album-editor.component.scss',
   template: `
     @if (album()) {
-      <div class="editor-container">
+      <div class="album-layout">
 
         <!-- header button bar -->
         <div class="btn-group">
-          <a mat-stroked-button routerLink="/albums">
-            <mat-icon>list</mat-icon> List
+          <a mat-flat-button routerLink="/albums">
+            <span class="material-icons">view_list</span> List
           </a>
           @if (album()!.Id) {
-            <a mat-stroked-button [routerLink]="['/album', album()!.Id]">
-              <mat-icon>visibility</mat-icon> View
+            <a mat-flat-button [routerLink]="['/album', album()!.Id]">
+              <span class="material-icons">visibility</span> View
             </a>
           }
           @if (album()!.AmazonUrl) {
-            <a mat-stroked-button [href]="album()!.AmazonUrl" target="_amazon">
-              <mat-icon>attach_money</mat-icon> Buy
+            <a mat-flat-button [href]="album()!.AmazonUrl" target="_amazon">
+              <span class="material-icons">attach_money</span> Buy
             </a>
           }
         </div>
 
         <app-error-display [error]="error()" (dismiss)="error.set('')" />
+        <hr class="separator" />
 
         <div class="editor-layout">
           <!-- left: form -->
@@ -70,10 +71,13 @@ import { JsonPipe } from '@angular/common';
                 <mat-label>Year</mat-label>
                 <input matInput type="number" [(ngModel)]="album()!.Year" />
               </mat-form-field>
-              <mat-form-field appearance="outline" class="flex-grow">
-                <mat-label>Image URL</mat-label>
-                <input matInput [(ngModel)]="album()!.ImageUrl" />
-              </mat-form-field>
+              <div class="input-group flex-grow">
+                <span class="input-group-text material-icons">image</span>
+                <mat-form-field appearance="outline" class="flex-grow">
+                  <mat-label>Image URL</mat-label>
+                  <input matInput [(ngModel)]="album()!.ImageUrl" />
+                </mat-form-field>
+              </div>
             </div>
 
             <mat-form-field appearance="outline" class="full-width">
@@ -81,15 +85,21 @@ import { JsonPipe } from '@angular/common';
               <textarea matInput [(ngModel)]="album()!.Description" rows="4"></textarea>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Amazon URL</mat-label>
-              <input matInput [(ngModel)]="album()!.AmazonUrl" />
-            </mat-form-field>
+            <div class="input-group full-width">
+              <span class="input-group-text material-icons">attach_money</span>
+              <mat-form-field appearance="outline" class="flex-grow">
+                <mat-label>Amazon URL</mat-label>
+                <input matInput [(ngModel)]="album()!.AmazonUrl" />
+              </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Spotify URL</mat-label>
-              <input matInput [(ngModel)]="album()!.SpotifyUrl" />
-            </mat-form-field>
+            <div class="input-group full-width">
+              <span class="input-group-text material-icons">music_note</span>
+              <mat-form-field appearance="outline" class="flex-grow">
+                <mat-label>Spotify URL</mat-label>
+                <input matInput [(ngModel)]="album()!.SpotifyUrl" />
+              </mat-form-field>
+            </div>
 
             <h3>Tracks</h3>
             <div class="tracks">
@@ -113,8 +123,12 @@ import { JsonPipe } from '@angular/common';
             </div>
 
             <div class="actions">
-              <button mat-flat-button (click)="save()">Save</button>
-              <button mat-stroked-button (click)="cancel()">Cancel</button>
+              <button mat-flat-button class="save-btn" (click)="save()">
+                <span class="material-icons">check</span> Save
+              </button>
+              <button mat-flat-button class="cancel-btn" (click)="cancel()">
+                <span class="material-icons">close</span> Cancel
+              </button>
             </div>
           </div>
 
@@ -134,9 +148,16 @@ import { JsonPipe } from '@angular/common';
             </div>
             <div class="album-descript line-breaks">{{ album()!.Description }}</div>
             <hr />
-            @for (track of album()!.Tracks; track track.Id || $index; let i = $index) {
-              <div class="song">{{ i + 1 }}. {{ track.SongName }} <span class="track-len">{{ track.Length }}</span></div>
-            }
+            <table class="track-list">
+              <tbody>
+                @for (track of album()!.Tracks; track track.Id || $index) {
+                  <tr>
+                    <td><span class="material-icons track-icon">music_note</span> {{ track.SongName }}</td>
+                    <td class="track-len">{{ track.Length }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

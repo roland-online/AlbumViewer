@@ -233,7 +233,8 @@ mat-toolbar.mat-toolbar {
 // ── Artist/Album detail btn-group (C.5, C.3) — blue to match Bootstrap btn-primary btn-sm ──
 
 app-artist-detail .btn-group,
-app-album-detail .btn-group {
+app-album-detail .btn-group,
+app-album-editor .btn-group {
   [mat-flat-button] {
     background-color: #4292d5 !important;
     color: white !important;
@@ -305,6 +306,94 @@ app-album-list, app-artist-detail {
       a, a:hover { color: beige; text-decoration: none; }
       a:hover { color: white; }
     }
+  }
+}
+
+// ── Album editor (C.7) ────────────────────────────────────────────────────
+
+app-album-editor {
+  .album-layout {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 15px;
+    box-sizing: border-box;
+  }
+
+  --av-btn-group-margin-bottom: 0px;
+  --av-separator-margin-top: 10px;
+  --av-editor-layout-padding: 16px 0;
+  --av-editor-layout-gap: 32px;
+
+  .album-title-big, h2 {
+    font-family: Trebuchet, 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    line-height: 1.2;
+  }
+
+  .album-image-big { box-shadow: 2px 2px 4px var(--av-banner-bg); }
+
+  --mat-form-field-outlined-outline-color: #ced4da;
+  --mat-form-field-outlined-hover-outline-color: #ced4da;
+  --mat-form-field-outlined-focus-outline-color: #ced4da;
+
+  .input-group-text {
+    background: #e9ecef;
+    border: 1px solid #ced4da;
+    border-right: none;
+    color: #495057;
+    font-size: 1.1em;
+  }
+
+  .input-group mat-form-field .mdc-notched-outline__leading,
+  .track-row mat-form-field .mdc-notched-outline__leading {
+    border-radius: 0 !important;
+  }
+
+  .track-row .track-num {
+    background: #e9ecef;
+    border: 1px solid #ced4da;
+    border-right: none;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    box-sizing: border-box;
+    padding: 0 10px;
+    border-radius: 4px 0 0 4px;
+    flex-shrink: 0;
+    font-size: 0.9em;
+    min-width: 36px;
+  }
+
+  --av-track-row-border: #dee2e6;
+
+  .track-list {
+    tr:nth-child(odd) { background: rgba(0, 0, 0, 0.05); }
+    .track-icon { color: var(--av-album-artist-color); }
+  }
+
+  .save-btn {
+    background-color: #28a745 !important;
+    color: white !important;
+    border-radius: 4px !important;
+    padding: 0 12px !important;
+    min-width: unset !important;
+    line-height: 34px !important;
+    height: 34px !important;
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    &:hover { background-color: #218838 !important; }
+  }
+
+  .cancel-btn {
+    background-color: #6c757d !important;
+    color: white !important;
+    border-radius: 4px !important;
+    padding: 0 12px !important;
+    min-width: unset !important;
+    line-height: 34px !important;
+    height: 34px !important;
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    &:hover { background-color: #5a6268 !important; }
   }
 }
 
