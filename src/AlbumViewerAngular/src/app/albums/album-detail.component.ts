@@ -2,8 +2,6 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AlbumService } from '../services/album.service';
 import { AuthService } from '../services/auth.service';
@@ -14,33 +12,34 @@ import { NO_COVER_SVG } from '../core/no-cover';
 
 @Component({
   selector: 'app-album-detail',
-  imports: [RouterLink, MatButtonModule, MatIconModule, MatListModule, MatDividerModule, MatProgressBarModule, ErrorDisplayComponent],
+  imports: [RouterLink, MatButtonModule, MatIconModule, MatProgressBarModule, ErrorDisplayComponent],
   styleUrl: './album-detail.component.scss',
   template: `
     @if (album()) {
-      <div class="detail-container">
+      <div class="album-layout">
         <div class="btn-group" role="group">
-          <a mat-stroked-button routerLink="/albums">
-            <mat-icon>list</mat-icon> Albums
+          <a mat-flat-button routerLink="/albums">
+            <span class="material-icons">view_list</span> Albums
           </a>
           @if (auth.isAuthenticated()) {
-            <a mat-stroked-button [routerLink]="['/album/edit', album()!.Id]">
-              <mat-icon>edit</mat-icon> Edit
+            <a mat-flat-button [routerLink]="['/album/edit', album()!.Id]">
+              <span class="material-icons">edit_note</span> Edit
             </a>
           }
           @if (album()!.AmazonUrl) {
-            <a mat-stroked-button [href]="album()!.AmazonUrl" target="_amazon">
-              <mat-icon>attach_money</mat-icon> Buy
+            <a mat-flat-button [href]="album()!.AmazonUrl" target="_amazon">
+              <span class="material-icons">attach_money</span> Buy
             </a>
           }
           @if (auth.isAuthenticated()) {
-            <button mat-stroked-button color="warn" (click)="remove()">
-              <mat-icon>delete</mat-icon> Delete
+            <button mat-flat-button (click)="remove()">
+              <span class="material-icons">delete_forever</span> Delete
             </button>
           }
         </div>
 
         <app-error-display [error]="errorMsg()" (dismiss)="errorMsg.set('')" />
+        <hr class="separator" />
 
         <div class="detail-layout">
           <div class="cover-panel">
@@ -56,40 +55,42 @@ import { NO_COVER_SVG } from '../core/no-cover';
               by <a [routerLink]="['/artist', album()!.Artist?.Id]">{{ album()!.Artist?.ArtistName }}</a>
               {{ album()!.Year ? 'in ' + album()!.Year : '' }}
             </div>
-            @if (album()!.AmazonUrl) {
-              <a [href]="album()!.AmazonUrl" target="_amazon" class="media-link">
-                <mat-icon>attach_money</mat-icon> Buy
-              </a>
-            }
-            @if (album()!.SpotifyUrl) {
-              <a [href]="album()!.SpotifyUrl" target="_spotify" class="media-link">
-                <mat-icon>volume_up</mat-icon> Play
-              </a>
-            }
             <div class="description line-breaks">{{ album()!.Description }}</div>
-            <mat-divider />
 
-            <mat-list class="track-list">
-              @for (track of album()!.Tracks; track track.Id; let i = $index) {
-                <mat-list-item>
-                  <span matListItemMeta class="track-num">{{ i + 1 }}</span>
-                  <span matListItemTitle>{{ track.SongName }}</span>
-                  <span matListItemLine class="track-len">{{ track.Length }}</span>
-                </mat-list-item>
+            <div class="media-links">
+              @if (album()!.AmazonUrl) {
+                <a [href]="album()!.AmazonUrl" target="_amazon" class="media-link">
+                  <span class="material-icons">attach_money</span> Buy
+                </a>
               }
-            </mat-list>
+              @if (album()!.SpotifyUrl) {
+                <a [href]="album()!.SpotifyUrl" target="_spotify" class="media-link">
+                  <span class="material-icons">volume_up</span> Play
+                </a>
+              }
+            </div>
+
+            <table class="track-list">
+              <tbody>
+                @for (track of album()!.Tracks; track track.Id) {
+                  <tr>
+                    <td><span class="material-icons track-icon">music_note</span> {{ track.SongName }}</td>
+                    <td class="track-len">{{ track.Length }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
 
             <hr />
             <div class="more-from">
-              More from
-              <a [routerLink]="['/artist', album()!.Artist?.Id]">
-                {{ album()!.Artist?.ArtistName }}<br />
-                @if (album()!.Artist?.ImageUrl) {
+              More from <a [routerLink]="['/artist', album()!.Artist?.Id]">{{ album()!.Artist?.ArtistName }}</a>
+              @if (album()!.Artist?.ImageUrl) {
+                <a [routerLink]="['/artist', album()!.Artist?.Id]">
                   <img [src]="album()!.Artist!.ImageUrl!"
                        (error)="onImgError($event)"
                        class="artist-thumb" />
-                }
-              </a>
+                </a>
+              }
             </div>
           </div>
         </div>

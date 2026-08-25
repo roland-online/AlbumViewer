@@ -5,6 +5,11 @@
 
 // Restore fork_root's 16px base and Segoe UI font so rem/em units and typography match parity
 html { font-size: 16px; }
+
+// Bootstrap 4 default link colour
+a { color: #007bff; }
+a:hover { color: #0056b3; }
+
 body {
   font-size: 16px !important;
   font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
@@ -300,6 +305,59 @@ app-album-list, app-artist-detail {
       a, a:hover { color: beige; text-decoration: none; }
       a:hover { color: white; }
     }
+  }
+}
+
+// ── Album detail (C.3) ────────────────────────────────────────────────────
+
+app-album-detail {
+  .album-layout {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 15px;
+    box-sizing: border-box;
+  }
+
+  --av-btn-group-margin-bottom: 0px;
+  --av-separator-margin-top: 16px;
+  --av-separator-margin-bottom: 0px;
+  --av-detail-layout-gap: 32px;
+  --av-detail-layout-padding: 16px 0;
+  --av-album-title-big-size: 1.55em;
+  --av-album-title-big-margin-bottom: 4px;
+  --av-album-artist-margin-bottom: 8px;
+  --av-detail-description-margin: 10px 0 16px;
+  --av-media-links-margin: 0 0 10px;
+  --av-more-from-hr-margin: 15px 0 15px;
+  --av-more-from-margin-top: 0px;
+  --av-heading-line-height: 1.2;
+
+  .media-link {
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 0.875rem;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+
+  .track-list {
+    --av-track-row-border: #dee2e6;
+    tr:nth-child(odd) { background: rgba(0, 0, 0, 0.05); }
+    .track-icon { color: var(--av-album-artist-color); }
+  }
+
+  .album-title-big, h2 {
+    font-family: Trebuchet, 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    line-height: 1.2;
+  }
+
+  .album-artist a { color: var(--av-album-artist-color); }
+
+  .cover-img {
+    box-shadow: 2px 2px 4px var(--av-banner-bg);
+  }
+
+  .artist-thumb {
+    box-shadow: 2px 2px 3px var(--av-banner-bg);
   }
 }
 
