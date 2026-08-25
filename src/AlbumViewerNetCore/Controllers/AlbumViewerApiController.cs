@@ -293,20 +293,10 @@ namespace AlbumViewerAspNetCore
             if (!HttpContext.User.Identity.IsAuthenticated)
                 throw new ApiException("You have to be logged in to modify data", 401);
 
-            string isSqLite = Configuration["data:useSqLite"];
+            string providerName = context.Database.ProviderName ?? string.Empty;
             try
             {
-                if (isSqLite != "true")
-                {
-                    // ExecuteSqlRaw // in EF 3.0
-                    context.Database.ExecuteSqlRaw(@"
-drop table Tracks; 
-drop table Albums;
-drop table Artists;
-drop table Users;
-");
-                }
-                else
+                if (providerName.Contains("Sqlite", StringComparison.OrdinalIgnoreCase))
                 {
                     // this is not reliable for multiple connections
                     context.Database.CloseConnection();
@@ -319,6 +309,16 @@ drop table Users;
                     {
                         throw new ApiException("Can't reset data. Existing database is in use.");
                     }
+                }
+                else
+                {
+                    // SQL Server and PostgreSQL both support IF EXISTS (SQL Server 2016+)
+                    context.Database.ExecuteSqlRaw(@"
+drop table if exists Tracks;
+drop table if exists Albums;
+drop table if exists Artists;
+drop table if exists Users;
+");
                 }
 
             }

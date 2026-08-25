@@ -126,11 +126,14 @@ public class AlbumTests(AlbumViewerFixture fixture)
     [Fact]
     public async Task SaveAlbum_ZeroTracks_Returns500()
     {
+        // Load full detail — list endpoint omits Tracks; submitting a list item directly
+        // would trigger the no-tracks validation accidentally, not by intent.
         var list = await _client.GetFromJsonAsync<JsonArray>("/api/albums");
-        var album = list![0]!.Deserialize<JsonObject>()!;
+        var firstId = list![0]!["Id"]!.GetValue<int>();
+        var album = (await _client.GetFromJsonAsync<JsonObject>($"/api/album/{firstId}"))!;
         album["Id"] = 0;
         album["Title"] = "NoTracksTest " + Guid.NewGuid().ToString("N")[..8];
-        album["Tracks"] = new JsonArray();
+        album["Tracks"] = new JsonArray(); // explicitly empty — this is the condition under test
 
         var response = await _client.PostAsJsonAsync("/api/album", album);
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
@@ -139,11 +142,14 @@ public class AlbumTests(AlbumViewerFixture fixture)
     [Fact]
     public async Task SaveAlbum_ShortDescription_Returns500()
     {
+        // Load full detail — list endpoint omits Tracks; submitting a list item directly
+        // would fail on the no-tracks validation before reaching the description validation.
         var list = await _client.GetFromJsonAsync<JsonArray>("/api/albums");
-        var album = list![0]!.Deserialize<JsonObject>()!;
+        var firstId = list![0]!["Id"]!.GetValue<int>();
+        var album = (await _client.GetFromJsonAsync<JsonObject>($"/api/album/{firstId}"))!;
         album["Id"] = 0;
         album["Title"] = "ShortDescTest " + Guid.NewGuid().ToString("N")[..8];
-        album["Description"] = "Too short.";
+        album["Description"] = "Too short."; // this is the condition under test; Tracks are intact
 
         var response = await _client.PostAsJsonAsync("/api/album", album);
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);

@@ -55,11 +55,21 @@ namespace AlbumViewerNetCore.Controllers
 	    [HttpGet("api/applicationstats")]
         public ApplicationStats GetApplicationStats()
         {
-            string pgConnStr = RawConfiguration.GetConnectionString("AlbumViewer");
-            string useSqLite = RawConfiguration["Data:useSqLite"];
-            string dataMode = !string.IsNullOrEmpty(pgConnStr) ? "PostgreSQL"
-                              : useSqLite == "true" ? "SqLite"
-                              : "Sql Server";
+            var connStr = RawConfiguration.GetConnectionString("AlbumViewer");
+            var provider = RawConfiguration["Data:Provider"]?.Trim().ToLowerInvariant();
+            if (string.IsNullOrEmpty(provider))
+            {
+                if (!string.IsNullOrEmpty(connStr)) provider = "postgresql";
+                else if (RawConfiguration["Data:useSqLite"] == "true") provider = "sqlite";
+                else provider = "sqlserver";
+            }
+            string dataMode = provider switch
+            {
+                "sqlite"     => "SqLite",
+                "sqlserver"  => "Sql Server",
+                "postgresql" => "PostgreSQL",
+                _            => provider
+            };
 
             return new ApplicationStats
             {

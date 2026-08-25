@@ -51,7 +51,7 @@ Cookie-based login (alternative to JWT). **`[Obsolete]`** — kept for reference
 
 ### `GET /api/albums`
 
-Return all albums, ordered by title. Includes `Artist` and `Tracks` on each album.
+Return all albums, ordered by title. Includes `Artist` on each album. `Tracks` are **not** included in the list response (performance — not needed in list UI). Load `GET /api/album/{id}` for full detail including tracks.
 
 **Query params:**
 - `page` (int, default `-1`) — 1-based page number; `-1` or `0` returns all.
@@ -124,7 +124,7 @@ Return a single artist with their full album list (each album includes `Tracks` 
 
 Name-prefix autocomplete. Returns empty array if `search` is missing or blank.
 
-**Response 200:** array of `{ "name": "...", "id": "..." }` where `id` is the artist name string (used as the lookup value in the Angular combo).
+**Response 200:** array of `{ "name": "...", "id": 123 }` where `id` is the integer artist primary key. Fixed in B.16a — was incorrectly projecting `id = ArtistName` (string) instead of the real numeric `Id`.
 
 ---
 

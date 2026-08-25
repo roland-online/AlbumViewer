@@ -14,6 +14,7 @@ namespace AlbumViewer.Tests;
 /// </summary>
 public class AdminTests
 {
+    [Fact]
     public async Task ReloadData_WithAuth_Returns200AndReseeds()
     {
         // Isolated factory — reloaddata drops + recreates all tables; must not share state with other tests

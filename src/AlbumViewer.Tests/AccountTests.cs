@@ -38,7 +38,7 @@ public class AccountTests(AlbumViewerFixture fixture)
     }
 
     [Fact]
-    public async Task IsAuthenticated_WithoutToken_Returns401()
+    public async Task IsAuthenticated_WithoutToken_Returns200False()
     {
         var response = await fixture.Factory.CreateClient()  // unauthenticated
             .GetAsync("/api/isAuthenticated");
