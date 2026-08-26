@@ -70,7 +70,7 @@ hr.separator {
   .album-image-big {
     width: auto;
     max-width: 240px;
-    border-radius: 4px;
+    border-radius: var(--av-radius-standard, 4px);
     display: block;
     margin-bottom: 8px;
   }
@@ -83,13 +83,13 @@ hr.separator {
   }
 
   .album-artist {
-    font-size: 0.85em;
+    font-size: var(--av-font-size-meta, 0.9em);
     font-style: italic;
     margin-bottom: 8px;
   }
 
   .album-descript {
-    font-size: 0.8em;
+    font-size: var(--av-font-size-description, 0.85em);
     color: var(--mat-sys-on-surface-variant);
     margin-bottom: 8px;
   }
@@ -124,6 +124,6 @@ hr.separator {
 }
 
 .error {
-  color: #c62828;
-  font-size: 0.875rem;
+  color: var(--av-color-error, var(--mat-sys-error));
+  font-size: var(--av-font-size-secondary, 0.875rem);
 }

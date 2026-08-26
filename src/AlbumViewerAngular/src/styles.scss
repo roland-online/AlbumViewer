@@ -44,15 +44,6 @@ body {
 .snack-error .mat-mdc-snack-bar-label { color: #b71c1c; }
 .snack-error { background: #ffebee; }
 
-.page-header-text {
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--av-page-header-color, var(--mat-sys-primary));
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
 hr.separator {
   border: none;
   border-top: 1px solid var(--mat-sys-outline-variant);

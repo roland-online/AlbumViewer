@@ -11,7 +11,7 @@ import { NotificationService } from '../core/notification.service';
   selector: 'app-login',
   imports: [FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   template: `
-    <div style="max-width:320px;margin:80px auto;display:flex;flex-direction:column;gap:16px">
+    <div class="login-form">
       <h2>Sign In</h2>
       <mat-form-field>
         <mat-label>Username</mat-label>
@@ -21,10 +21,24 @@ import { NotificationService } from '../core/notification.service';
         <mat-label>Password</mat-label>
         <input matInput type="password" [(ngModel)]="password" />
       </mat-form-field>
-      @if (error) { <p style="color:red">{{ error }}</p> }
+      @if (error) { <p class="login-error">{{ error }}</p> }
       <button mat-flat-button (click)="login()">Sign In</button>
     </div>
   `,
+  styles: [`
+    .login-form {
+      max-width: 320px;
+      margin: var(--av-login-margin, 80px auto);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .login-error {
+      color: var(--av-color-error, var(--mat-sys-error));
+      font-size: var(--av-font-size-secondary, 0.875rem);
+      margin: 0;
+    }
+  `],
 })
 export class LoginComponent {
   private auth = inject(AuthService);

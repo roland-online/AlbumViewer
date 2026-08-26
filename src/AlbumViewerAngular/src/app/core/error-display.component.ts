@@ -24,10 +24,10 @@ import { MatButtonModule } from '@angular/material/button';
       gap: 8px;
       padding: 10px 12px;
       margin-bottom: 12px;
-      background: #fdecea;
-      border-left: 4px solid #c62828;
-      border-radius: 4px;
-      color: #c62828;
+      background: var(--av-color-error-bg, color-mix(in srgb, var(--mat-sys-error) 8%, transparent));
+      border-left: 4px solid var(--av-color-error, var(--mat-sys-error));
+      border-radius: var(--av-radius-standard, 4px);
+      color: var(--av-color-error, var(--mat-sys-error));
     }
     .error-message { flex: 1; }
   `],

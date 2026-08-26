@@ -17,6 +17,6 @@
 }
 
 .error {
-  color: #c62828;
-  font-size: 0.875rem;
+  color: var(--av-color-error, var(--mat-sys-error));
+  font-size: var(--av-font-size-secondary, 0.875rem);
 }

@@ -52,6 +52,12 @@ body {
   --av-album-overlay-link-hover: white;
   --av-album-hover-descript: white;
 
+  // Options page
+  --av-options-icon-color: steelblue;
+  --av-options-section-heading-size: 1.1em;
+  --av-options-section-heading-weight: 600;
+  --av-options-section-heading-color: #495057;
+
   // Artist list
   --av-artist-icon-color: steelblue;
   --av-artist-icon-size: 20px;
@@ -61,7 +67,27 @@ body {
 
   // Page headers
   --av-page-header-color: #0092d0;
+  --av-page-header-size: 24px;
   --av-badge-count-bg: #dc3545;
+  --av-badge-count-color: white;
+  --av-badge-count-size: 0.43em;
+  --av-badge-count-radius: 4px;
+  --av-badge-artist-color: white;
+  --av-badge-artist-size: 0.7em;
+  --av-badge-artist-radius: 4px;
+
+  // Typography scale
+  --av-font-size-secondary: 0.875rem;  // links, errors, small labels
+  --av-font-size-meta: 0.85em;         // artist/sub lines
+  --av-font-size-description: 0.8em;   // description/body text
+
+  // Error colours
+  --av-color-error: #c62828;
+  --av-color-error-bg: #fdecea;
+
+  // Border radius
+  --av-radius-card: 6px;
+  --av-radius-standard: 4px;
 
   // Artist detail headings / spacing
   --av-artist-name-margin-bottom: 8px;
@@ -284,6 +310,41 @@ app-artist-detail .add-btn {
   .mdc-button__label { line-height: 37px; }
 }
 
+// ── Page header text — shared across album-list, artist-list, options ─────
+app-album-list, app-artist-list, app-options {
+  .page-header-text {
+    font-size: var(--av-page-header-size, 1.5rem);
+    font-weight: 600;
+    color: var(--av-page-header-color, var(--mat-sys-primary));
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 24px;
+
+    .header-icon { font-size: inherit; line-height: 1; }
+
+    .badge-count {
+      display: inline-block;
+      background: var(--av-badge-count-bg, var(--mat-sys-error));
+      color: var(--av-badge-count-color, white);
+      font-size: var(--av-badge-count-size, 0.6em);
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: var(--av-badge-count-radius, 4px);
+      vertical-align: super;
+      margin-left: 2px;
+    }
+  }
+}
+
+// ── Options page (C.6) ────────────────────────────────────────────────────
+app-options {
+  .options-section h3 mat-icon {
+    font-size: 1.3em;
+    color: var(--av-options-icon-color, steelblue);
+  }
+}
+
 // ── Album list items (C.2) — also used in artist detail (C.5) ─────────────
 // Targets app-album-list and app-artist-detail; both use the same .album/.album-* structure.
 
@@ -299,16 +360,21 @@ app-album-list, app-artist-detail {
     }
 
     .album-title {
+      font-size: var(--av-font-size-title, 1rem);
       font-weight: bold;
       color: var(--av-album-title-color);
     }
 
     .album-artist {
+      font-size: var(--av-font-size-meta);
       font-style: italic;
       color: var(--av-album-artist-color);
     }
 
-    .album-descript { max-height: 83px; }
+    .album-descript {
+      font-size: var(--av-font-size-description);
+      max-height: 83px;
+    }
 
     .album-overlay {
       background: var(--av-album-overlay-bg);
