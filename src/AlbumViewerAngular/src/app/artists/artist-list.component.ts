@@ -7,7 +7,6 @@ import { AppConfig } from '../core/app-config';
 import { ErrorDisplayComponent } from '../core/error-display.component';
 import { Artist } from '../models/entities';
 import { NO_COVER_SVG } from '../core/no-cover';
-
 @Component({
   selector: 'app-artist-list',
   imports: [MatProgressBarModule, MatListModule, ErrorDisplayComponent],

@@ -24,4 +24,3 @@ export class App {
     this.auth.logout().subscribe(() => this.router.navigate(['/login']));
   }
 }
-

@@ -3,6 +3,23 @@
 // All Strahl-specific colour and decorative values live here; component SCSS files
 // reference var(--av-*) only — no Strahl values are hardcoded in component files.
 
+// Page transition — requires withViewTransitions() in app.config.ts (one-line opt-in).
+// Remove these rules to disable transitions without touching any TypeScript.
+::view-transition-old(root) {
+  animation: 350ms ease-out slide-out-left;
+}
+::view-transition-new(root) {
+  animation: 350ms ease-out slide-in-right;
+}
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes slide-out-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+
 // Restore fork_root's 16px base and Segoe UI font so rem/em units and typography match parity
 html { font-size: 16px; }
 

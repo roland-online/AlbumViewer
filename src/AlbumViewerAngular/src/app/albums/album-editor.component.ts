@@ -11,15 +11,12 @@ import { ArtistService } from '../services/artist.service';
 import { ErrorDisplayComponent } from '../core/error-display.component';
 import { NotificationService } from '../core/notification.service';
 import { Album, Artist, ArtistLookupItem, Track } from '../models/entities';
-import { JsonPipe } from '@angular/common';
-
 @Component({
   selector: 'app-album-editor',
   imports: [
     RouterLink, FormsModule,
     MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule,
     MatAutocompleteModule, ErrorDisplayComponent,
-    JsonPipe,
   ],
   styleUrl: './album-editor.component.scss',
   template: `

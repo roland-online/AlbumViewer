@@ -10,7 +10,6 @@ import { ErrorDisplayComponent } from '../core/error-display.component';
 import { NotificationService } from '../core/notification.service';
 import { Artist, Album } from '../models/entities';
 import { NO_COVER_SVG } from '../core/no-cover';
-
 @Component({
   selector: 'app-artist-detail',
   imports: [RouterLink, MatButtonModule, MatIconModule, MatProgressBarModule, ErrorDisplayComponent],
