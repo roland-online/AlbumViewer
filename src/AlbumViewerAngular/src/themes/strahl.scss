@@ -46,6 +46,7 @@ h4 { font-size: 1.1em; }
   --av-banner-bg: #535353;
   --av-banner-text: #e1e1e1;
   --av-banner-height: 58px;
+  --av-bottom-nav-height: 43px;
   --av-banner-hover-bg: #767676;
   --av-active-underline: orange;
 
@@ -216,8 +217,8 @@ mat-toolbar.mat-toolbar {
     }
   }
 
-  // Below 640px: hide entire nav links, keep search and brand
-  @media (max-width: 640px) {
+  // Below 780px: top nav hides entirely, replaced by .bottom-nav (below).
+  @media (max-width: 780px) {
     .toolbar-nav { display: none; }
   }
 
@@ -279,6 +280,92 @@ mat-toolbar.mat-toolbar {
 
     &:focus { outline: 1px solid steelblue; }
   }
+}
+
+// ── Bottom nav bar (C.11) ───────────────────────────────────────────────────
+// Original app-footer component: a duplicate nav, hidden by default, that swaps
+// places with the top toolbar nav ≤780px (reclaims header space taken by branding).
+// Icon+text ≤780px, icon-only ≤640px — matches original's two-stage breakpoint.
+
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: var(--av-bottom-nav-height, 43px);
+  z-index: 10;
+  background: var(--av-banner-bg);
+  border-top: 1px solid black;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  a[mat-button] {
+    --mat-button-text-label-text-weight: 400;
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    color: var(--av-banner-text);
+    font-size: 1rem;
+    padding: 0 6px;
+    border-radius: 2px;
+    border-bottom: solid 4px transparent;
+    transition: background 150ms, border-color 150ms;
+    min-width: unset;
+
+    &:hover {
+      background: var(--av-banner-hover-bg);
+      border-bottom-color: silver;
+      color: white;
+    }
+
+    &.active {
+      color: white;
+      font-weight: 600;
+      border-bottom-color: var(--av-active-underline);
+    }
+
+    mat-icon { display: none; }
+
+    &[routerlink='/albums']::before {
+      content: '';
+      display: inline-block;
+      width: 23px;
+      height: 23px;
+      background: url('/images/record.png') no-repeat center / contain;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    &[routerlink='/artists']::before {
+      content: '';
+      display: inline-block;
+      width: 27px;
+      height: 23px;
+      background: url('/images/artists32.png') no-repeat center / contain;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    &[routerlink='/options']::before {
+      content: '';
+      display: inline-block;
+      width: 23px;
+      height: 23px;
+      background: url('/images/gear.png') no-repeat center / contain;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+  }
+}
+
+@media (max-width: 780px) {
+  .bottom-nav { display: flex; }
+  main { bottom: var(--av-bottom-nav-height, 43px); }
+}
+
+// Below 640px: icon-only in whichever nav is currently visible.
+@media (max-width: 640px) {
+  .toolbar-nav .nav-label, .bottom-nav .nav-label { display: none; }
 }
 
 // ── Artist/Album detail btn-group (C.5, C.3) — blue to match Bootstrap btn-primary btn-sm ──

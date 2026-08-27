@@ -42,3 +42,15 @@
 <main>
   <router-outlet />
 </main>
+
+<nav class="bottom-nav">
+  <a mat-button routerLink="/albums" routerLinkActive="active">
+    <mat-icon>album</mat-icon> <span class="nav-label">Albums</span>
+  </a>
+  <a mat-button routerLink="/artists" routerLinkActive="active">
+    <mat-icon>group</mat-icon> <span class="nav-label">Artists</span>
+  </a>
+  <a mat-button routerLink="/options" routerLinkActive="active">
+    <mat-icon>settings</mat-icon> <span class="nav-label">Options</span>
+  </a>
+</nav>
