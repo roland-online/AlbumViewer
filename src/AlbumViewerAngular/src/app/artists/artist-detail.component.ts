@@ -51,7 +51,7 @@ import { NO_COVER_SVG } from '../core/no-cover';
           </div>
         </div>
 
-        <h2>Albums ({{ artist()!.Albums?.length }})</h2>
+        <h3>Albums ({{ artist()!.Albums?.length }})</h3>
 
         <div class="album-grid">
           @for (album of artist()!.Albums; track album.Id) {

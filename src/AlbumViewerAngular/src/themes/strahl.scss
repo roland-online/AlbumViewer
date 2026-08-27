@@ -33,6 +33,14 @@ body {
   letter-spacing: 0.7px;
 }
 
+// Global heading parity (fork_root albumviewer.css: h1-h6, h2/h3, h3, h4 rules)
+h1, h2, h3, h4, h5, h6 { font-weight: 600; }
+h2, h3 {
+  font-family: Trebuchet, 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+h3 { color: steelblue; }
+h4 { font-size: 1.1em; }
+
 :root {
   // Banner / toolbar
   --av-banner-bg: #535353;
@@ -94,7 +102,7 @@ body {
   --av-separator-margin-bottom: 15px;
   --av-artist-header-margin-bottom: 24px;
   --av-btn-group-margin-bottom: 20px;
-  --av-h2-size: 1.75rem;
+  --av-h3-size: 1.75rem;
   --av-artist-name-size-h: 2rem;
   --av-heading-line-height: 1.2;
 }
@@ -339,6 +347,12 @@ app-album-list, app-artist-list, app-options {
 
 // ── Options page (C.6) ────────────────────────────────────────────────────
 app-options {
+  // Original heading level was h4 (Bootstrap list-group-item-heading), which never
+  // received the global h2/h3 Trebuchet override — cancel it here to inherit body's Segoe UI.
+  .options-section h3 {
+    font-family: inherit;
+  }
+
   .options-section h3 mat-icon {
     font-size: 1.3em;
     color: var(--av-options-icon-color, steelblue);
@@ -411,6 +425,10 @@ app-album-editor {
     font-family: Trebuchet, 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     line-height: 1.2;
   }
+
+  // "Tracks" / "Preview" section headings — Bootstrap 4's base h3 size (1.75rem),
+  // never explicitly set in fork_root's custom CSS since it relied on Bootstrap's default scale.
+  h3 { font-size: 1.75rem; line-height: 1.2; }
 
   .album-image-big { box-shadow: 2px 2px 4px var(--av-banner-bg); }
 

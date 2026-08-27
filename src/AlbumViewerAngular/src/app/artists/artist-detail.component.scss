@@ -44,11 +44,11 @@ hr.separator {
   }
 }
 
-h2 {
-  font-size: var(--av-h2-size, 1.5rem);
+h3 {
+  font-size: var(--av-h3-size, 1.5rem);
   font-weight: 600;
   line-height: var(--av-heading-line-height, normal);
-  margin: 0 0 var(--av-h2-margin-bottom, 8px);
+  margin: 0 0 var(--av-h3-margin-bottom, 8px);
 }
 
 .album-grid {
