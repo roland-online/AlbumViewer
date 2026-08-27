@@ -1,7 +1,7 @@
 # AlbumViewer API Reference
 
-Generated from code review — 2026-08-07.
-Base URL: `http://localhost:5000` (dev). OpenAPI doc: `GET /openapi/v1.json`.
+Generated from code review — 2026-08-07. Re-verified against controller source — 2026-08-27.
+Base URL: `http://localhost:5000` (dev). OpenAPI doc: `GET /openapi/v1.json` — currently reachable but returns an empty `paths: {}`; this document is the source of truth until that's fixed (see checklist D.1a).
 
 Auth: JWT Bearer. Obtain token from `POST /api/authenticate`. Pass as `Authorization: Bearer {token}`.
 Write endpoints require auth. Read endpoints are open unless noted.
@@ -168,9 +168,9 @@ Return the `ApplicationConfiguration` object (app name, JWT settings, mail setti
 
 ### `GET /api/applicationstats`
 
-Return runtime stats (album count, artist count, track count, .NET version, OS, etc.).
+Return runtime environment info: OS platform, .NET version, and data provider mode (`SqLite` / `Sql Server` / `PostgreSQL`, derived from configuration). Does **not** include album/artist/track counts.
 
-**Response 200:** stats object.
+**Response 200:** `ApplicationStats { OsPlatform, AspDotnetVersion, AngularVersion, DataMode }`. `AngularVersion` is declared but never populated server-side — always `null` on the wire; the Angular client overlays its own version client-side via `document.querySelector('[ng-version]')` (parity with the original's jQuery approach).
 
 ---
 
@@ -184,9 +184,18 @@ Intentionally throws `InvalidOperationException`. Used to verify the `IException
 
 ---
 
-### `GET /api/reloaddata`
+### `GET /api/reloaddata` 🔒
 
 Reload seed data from `albums.js`. Drops and re-imports all albums and artists.
+
+**Response 200:** `true`.
+**Response 401:** not authenticated.
+
+---
+
+### Undocumented action: `DeleteAlbumByName`
+
+`AlbumViewerApiController.Albums.cs` defines a `[HttpGet]` action `DeleteAlbumByName(string name)` with no route template and no controller-level route prefix. Empirically it does not intercept `GET /` (the SPA fallback wins there) and no other plausible URL was found for it during this review — likely dead/unreachable code, not a documented part of the interface. Flagged here rather than fixed, since removing dead code is outside this doc-accuracy pass's scope.
 
 ---
 

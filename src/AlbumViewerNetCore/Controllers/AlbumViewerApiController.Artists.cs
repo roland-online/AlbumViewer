@@ -11,7 +11,7 @@ namespace AlbumViewerAspNetCore
     {
         [HttpGet]
         [Route("api/artists")]
-        public async Task<IEnumerable<Artist>> GetArtists()
+        public async Task<IEnumerable<ArtistWithAlbumCount>> GetArtists()
         {
             return await ArtistRepo.GetAllArtists();
         }

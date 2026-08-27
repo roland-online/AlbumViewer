@@ -1,8 +1,14 @@
 using System.Net;
 using System.Net.Http.Json;
-using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AlbumViewer.Tests;
+
+// Wire shape is the anonymous object returned by AccountController.Authenticate — no server-side type exists.
+public record AuthResponse(
+    [property: JsonPropertyName("token")] string Token,
+    [property: JsonPropertyName("expires")] DateTime Expires,
+    [property: JsonPropertyName("displayName")] string DisplayName);
 
 [Collection("AlbumViewer")]
 public class AccountTests(AlbumViewerFixture fixture)
@@ -16,9 +22,9 @@ public class AccountTests(AlbumViewerFixture fixture)
             .PostAsJsonAsync("/api/authenticate", new { username = "test", password = "test" });
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        using var doc = await JsonDocument.ParseAsync(await response.Content.ReadAsStreamAsync());
-        Assert.True(doc.RootElement.TryGetProperty("token", out var token));
-        Assert.False(string.IsNullOrEmpty(token.GetString()));
+        var auth = await response.Content.ReadFromJsonAsync<AuthResponse>();
+        Assert.NotNull(auth);
+        Assert.False(string.IsNullOrEmpty(auth.Token));
     }
 
     [Fact]
@@ -50,9 +56,17 @@ public class AccountTests(AlbumViewerFixture fixture)
     }
 
     [Fact]
-    public async Task Logout_Returns200()
+    public async Task Logout_Returns200_AndRevokesToken()
     {
+        // Uses the collection-shared client/token — safe because no other test in the
+        // collection depends on isAuthenticated returning true afterwards (verified: the
+        // only other isAuthenticated call only asserts status code 200, not the bool body).
         var response = await _client.GetAsync("/api/logout");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var isAuthResponse = await _client.GetAsync("/api/isAuthenticated");
+        Assert.Equal(HttpStatusCode.OK, isAuthResponse.StatusCode);
+        var body = await isAuthResponse.Content.ReadAsStringAsync();
+        Assert.Equal("false", body.Trim());
     }
 }
