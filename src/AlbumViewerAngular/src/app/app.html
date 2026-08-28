@@ -1,14 +1,56 @@
-<mat-toolbar color="primary">
-  <a mat-button routerLink="/albums">Albums</a>
-  <a mat-button routerLink="/artists">Artists</a>
+<mat-toolbar>
+  <a class="brand" routerLink="/albums">
+    <span class="brand-sub">West Wind</span>
+    <span class="brand-text">AlbumViewer</span>
+  </a>
+
   <span class="toolbar-spacer"></span>
-  @if (auth.isAuthenticated()) {
-    <button mat-button (click)="logout()">Logout</button>
-  } @else {
-    <a mat-button routerLink="/login">Login</a>
-  }
+
+  <div class="toolbar-right">
+    @if (appConfig.isSearchAllowed()) {
+      <input class="toolbar-search"
+             type="text"
+             placeholder="Search..."
+             [ngModel]="appConfig.searchText()"
+             (ngModelChange)="appConfig.searchText.set($event)" />
+    }
+
+    <nav class="toolbar-nav">
+      <a mat-button routerLink="/albums" routerLinkActive="active">
+        <mat-icon>album</mat-icon> <span class="nav-label">Albums</span>
+      </a>
+      <a mat-button routerLink="/artists" routerLinkActive="active">
+        <mat-icon>group</mat-icon> <span class="nav-label">Artists</span>
+      </a>
+      <a mat-button routerLink="/options" routerLinkActive="active">
+        <mat-icon>settings</mat-icon> <span class="nav-label">Options</span>
+      </a>
+    </nav>
+
+    @if (auth.isAuthenticated()) {
+      <button mat-button (click)="logout()">
+        <mat-icon>lock</mat-icon> <span class="nav-label">Logout</span>
+      </button>
+    } @else {
+      <a mat-button routerLink="/login">
+        <mat-icon>lock_open</mat-icon> <span class="nav-label">Login</span>
+      </a>
+    }
+  </div>
 </mat-toolbar>
 
 <main>
   <router-outlet />
 </main>
+
+<nav class="bottom-nav">
+  <a mat-button routerLink="/albums" routerLinkActive="active">
+    <mat-icon>album</mat-icon> <span class="nav-label">Albums</span>
+  </a>
+  <a mat-button routerLink="/artists" routerLinkActive="active">
+    <mat-icon>group</mat-icon> <span class="nav-label">Artists</span>
+  </a>
+  <a mat-button routerLink="/options" routerLinkActive="active">
+    <mat-icon>settings</mat-icon> <span class="nav-label">Options</span>
+  </a>
+</nav>

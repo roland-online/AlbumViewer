@@ -1,46 +1,72 @@
 .list-header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 24px 0;
+  column-gap: 16px;
+  row-gap: 0;
+  padding: 4px 24px 12px;
+  flex-wrap: wrap;
 
-  .search-field { width: 320px; }
-
-  .count {
-    color: rgba(0, 0, 0, 0.54);
-    font-size: 0.875rem;
+  hr.header-rule {
+    flex-basis: 100%;
+    border: none;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+    margin: 12px 0 0;
   }
 }
 
-.artist-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
-  padding: 16px 24px 24px;
+
+.artist-list-wrap {
+  padding: 0 24px;
 }
 
-.artist-card {
-  cursor: pointer;
-  transition: box-shadow 0.2s;
+.artist-list {
+  padding: 0;
+  --mat-list-active-indicator-color: transparent;
+  --mat-list-active-indicator-shape: 0;
+  --mat-list-list-item-leading-padding: 0px;
+  --mat-list-list-item-trailing-padding: 0px;
+  --mat-list-list-item-one-line-container-height: 64px;
+}
 
-  &:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+.artist-row {
+  // mat-list-item's own internal MDC styles set cursor on the list item — confirmed by
+  // testing live (removing !important made the cursor revert to a plain arrow); a plain
+  // class selector doesn't have enough specificity to beat it.
+  cursor: pointer !important;
+  border-bottom: 1px solid var(--av-list-border, #dee2e6);
 
-  img[mat-card-image] {
-    height: 160px;
-    object-fit: cover;
-    object-position: top;
+  .artist-icon {
+    color: var(--av-artist-icon-color, var(--mat-sys-primary));
+    font-size: var(--av-artist-icon-size, 24px);
+  }
+
+  .artist-body {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+  }
+
+  .artist-count {
+    display: inline-block;
+    background: var(--av-artist-count-bg, var(--mat-sys-secondary));
+    color: var(--av-badge-artist-color, white);
+    font-size: var(--av-badge-artist-size, 0.7em);
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: var(--av-badge-artist-radius, 4px);
+    white-space: nowrap;
   }
 
   .artist-name {
-    font-weight: 500;
-    font-size: 0.875rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: var(--av-artist-name-size, 1em);
   }
 
-  .album-count {
-    font-size: 0.75rem;
-    color: rgba(0, 0, 0, 0.4);
+  .artist-thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--av-artist-thumb-radius, 4px);
+    object-fit: cover;
+    object-position: top;
   }
 }

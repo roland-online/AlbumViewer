@@ -1,38 +1,18 @@
 # Run docker-compose build
 # Run docker-compose up
 # Live long and prosper
-
-version: '3.1'
+#
+# Single self-contained container: the .NET app serves both the API and the
+# Angular build directly (MapStaticAssets + MapFallbackToFile), and SQLite is
+# the zero-config default (appsettings.json Data:Provider) — no separate nginx
+# reverse proxy or external database needed.
 
 services:
-
-  nginx:
-    container_name: nginxalbumviewer
-    image: nginxalbumviewer
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    # volumes:.
-    #   - ./dist:/usr/share/nginx/html
-    ports:
-      - "8081:80"
-#      - "443:443"
-    networks:
-      - app-network
-
   aspnet:
     container_name: 'westwindalbumviewer'
     image: 'rickstrahl/albumviewer:albumviewer'
     build:
-      context: ./src/AlbumViewerNetCore
-      dockerfile: Dockerfile
- #   volumes:
- #     - ./src/AlbumViewerNetCore:/var/www/albumviewer
+      context: .
+      dockerfile: src/AlbumViewerNetCore/Dockerfile
     ports:
-     - "5000:5000"
-    networks:
-      - app-network
- 
-networks:
-  app-network:
-    driver: bridge
+      - "5000:8080"

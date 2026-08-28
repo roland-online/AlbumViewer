@@ -53,30 +53,30 @@ namespace AlbumViewerNetCore.Controllers
         /// </summary>
         /// <returns></returns>
 	    [HttpGet("api/applicationstats")]
-        public object GetApplicationStats()
+        public ApplicationStats GetApplicationStats()
         {
-            
-            //var rt = typeof(IHostingEnvironment)
-            //    .GetTypeInfo()
-            //    .Assembly
-            //    .GetCustomAttribute<AssemblyFileVersionAttribute>();
-            //var v = new Version(rt.Version);
+            var connStr = RawConfiguration.GetConnectionString("AlbumViewer");
+            var provider = RawConfiguration["Data:Provider"]?.Trim().ToLowerInvariant();
+            if (string.IsNullOrEmpty(provider))
+            {
+                if (!string.IsNullOrEmpty(connStr)) provider = "postgresql";
+                else if (RawConfiguration["Data:useSqLite"] == "true") provider = "sqlite";
+                else provider = "sqlserver";
+            }
+            string dataMode = provider switch
+            {
+                "sqlite"     => "SqLite",
+                "sqlserver"  => "Sql Server",
+                "postgresql" => "PostgreSQL",
+                _            => provider
+            };
 
-            var vname = Assembly.GetEntryAssembly()?.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName;
-
-            string useSqLite = RawConfiguration["Data:useSqLite"];
-
-            // in 3.0 this might work - 2.2: SERIOUSLY????
-            //string runtime = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
-
-            var stats = new
+            return new ApplicationStats
             {
                 OsPlatform = System.Runtime.InteropServices.RuntimeInformation.OSDescription,
                 AspDotnetVersion = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription,
-                DataMode = useSqLite == "true" ? "SqLite" : "Sql Server"
+                DataMode = dataMode
             };
-
-            return stats;
         }
 
 

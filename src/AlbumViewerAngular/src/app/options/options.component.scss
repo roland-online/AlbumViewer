@@ -1,0 +1,26 @@
+.options-layout {
+  padding: 24px;
+  max-width: 640px;
+}
+
+.options-section {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  &:last-child { border-bottom: none; }
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px;
+    font-size: var(--av-options-section-heading-size, 1rem);
+    font-weight: var(--av-options-section-heading-weight, 500);
+    color: var(--av-options-section-heading-color, inherit);
+  }
+
+  p { margin: 4px 0; color: var(--mat-sys-on-surface-variant); }
+
+  mat-form-field { width: 100%; }
+}

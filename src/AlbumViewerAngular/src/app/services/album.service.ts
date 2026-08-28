@@ -75,3 +75,4 @@ export class AlbumService {
     this.albumList = this.albumList.filter(a => a.Id !== 0);
   }
 }
+

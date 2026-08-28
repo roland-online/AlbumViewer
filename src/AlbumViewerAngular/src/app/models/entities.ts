@@ -26,6 +26,11 @@ export interface ArtistResult {
   Albums: Album[];
 }
 
+export interface ArtistLookupItem {
+  id: number;
+  name: string;
+}
+
 export interface Track {
   Id: number;
   AlbumId: number;
@@ -47,3 +52,4 @@ export interface TokenInfo {
   expires: string;
   displayName: string;
 }
+

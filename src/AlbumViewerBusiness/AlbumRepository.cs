@@ -67,8 +67,7 @@ namespace AlbumViewerBusiness
         public async Task<List<Album>> GetAllAlbums(int page = 0, int pageSize = 15)
         {
             IQueryable<Album> albums = Context.Albums
-                .Include(ctx => ctx.Tracks)
-                .Include(ctx => ctx.Artist)
+                .Include(ctx => ctx.Artist)  // Tracks excluded — not shown in list UI
                 .OrderBy(alb => alb.Title);
 
             if (page > 0)
@@ -213,7 +212,7 @@ namespace AlbumViewerBusiness
                 ValidationErrors.Add("Please enter a title for this album.", "Title");
             else if (string.IsNullOrEmpty(entity.Description) || entity.Description.Length < 30)
                 ValidationErrors.Add("Please provide a description of at least 30 characters.");
-            else if (entity.Tracks.Count < 1)
+            else if (entity.Tracks == null || entity.Tracks.Count < 1)
                 ValidationErrors.Add("Album must have at least one song associated.");
 
             return ValidationErrors.Count < 1;

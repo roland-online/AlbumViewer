@@ -1,12 +1,33 @@
+hr.separator {
+  border: none;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  margin-top: var(--av-separator-margin-top, 10px);
+  margin-bottom: 0;
+}
+
+.btn-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: var(--av-btn-group-margin-bottom, 12px);
+}
+
 .editor-layout {
-  max-width: 680px;
-  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: var(--av-editor-layout-padding, 16px 0);
 
   h2 { margin: 0 0 8px; }
   h3 { margin: 16px 0 8px; }
+
+  @media (min-width: 960px) {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--av-editor-layout-gap, 32px);
+
+    .editor-form { flex: 5; min-width: 0; }
+    .editor-preview { flex: 7; min-width: 0; position: sticky; top: 24px; }
+  }
 }
 
 .full-width { width: 100%; }
@@ -29,20 +50,13 @@
 
 .track-row {
   display: flex;
-  align-items: center;
-  gap: 8px;
-
-  .track-num {
-    width: 24px;
-    color: rgba(0, 0, 0, 0.4);
-    font-size: 0.85rem;
-    text-align: right;
-    flex-shrink: 0;
-  }
+  align-items: flex-start;
+  gap: 0;
 
   .track-len {
     width: 80px;
     flex-shrink: 0;
+    margin-left: 8px;
   }
 }
 
@@ -52,7 +66,64 @@
   margin-top: 16px;
 }
 
+.editor-preview {
+  .album-image-big {
+    width: auto;
+    max-width: 240px;
+    border-radius: var(--av-radius-standard, 4px);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  // font-weight not repeated here — strahl.scss's global h1-h6 rule already covers it
+  .album-title-big {
+    font-size: var(--av-album-title-big-size, 1.55em);
+    line-height: var(--av-heading-line-height, normal);
+    margin: 0 0 4px;
+  }
+
+  .album-artist {
+    font-size: var(--av-font-size-meta, 0.9em);
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .album-descript {
+    font-size: var(--av-font-size-description, 0.85em);
+    color: var(--mat-sys-on-surface-variant);
+    margin-bottom: 8px;
+  }
+
+  .track-list {
+    width: 100%;
+    border-collapse: collapse;
+
+    tr { border-top: 1px solid var(--av-track-row-border, var(--mat-sys-outline-variant)); }
+    td { padding: 6px 5px; vertical-align: middle; border: none; }
+
+    .track-icon { font-size: 1em; vertical-align: middle; line-height: 1; }
+    .track-len { color: var(--mat-sys-outline); white-space: nowrap; text-align: right; width: 60px; }
+  }
+}
+
+.input-group {
+  display: flex;
+  align-items: flex-start;
+
+  .input-group-text {
+    display: flex;
+    align-items: center;
+    height: 56px;
+    box-sizing: border-box;
+    padding: 0 10px;
+    border-radius: var(--av-radius-standard, 4px) 0 0 var(--av-radius-standard, 4px);
+    flex-shrink: 0;
+  }
+
+  mat-form-field { flex: 1; }
+}
+
 .error {
-  color: #c62828;
-  font-size: 0.875rem;
+  color: var(--av-color-error, var(--mat-sys-error));
+  font-size: var(--av-font-size-secondary, 0.875rem);
 }

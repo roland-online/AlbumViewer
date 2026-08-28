@@ -4,6 +4,7 @@
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+@use 'themes/strahl';
 
 html {
   height: 100%;
@@ -37,3 +38,25 @@ body {
   height: 100%;
 }
 /* You can add global styles to this file, and also import other style files */
+
+// Material 3 snackbar theming is exposed via these custom properties, not a plain
+// `background`/`color` on the panel class — the actual surface is an inner MDC element.
+.snack-success {
+  --mat-snack-bar-container-color: #e8f5e9;
+  --mat-snack-bar-supporting-text-color: #1b5e20;
+  --mat-snack-bar-button-color: #1b5e20;
+}
+.snack-error {
+  --mat-snack-bar-container-color: #ffebee;
+  --mat-snack-bar-supporting-text-color: #b71c1c;
+  --mat-snack-bar-button-color: #b71c1c;
+}
+
+hr.separator {
+  border: none;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  margin: 0;
+  padding: 0;
+}
+
+.line-breaks { white-space: pre-wrap; }

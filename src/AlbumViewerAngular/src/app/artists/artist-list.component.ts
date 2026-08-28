@@ -1,63 +1,83 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, inject, OnInit, OnDestroy, signal, computed } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatListModule } from '@angular/material/list';
 import { ArtistService } from '../services/artist.service';
+import { AppConfig } from '../core/app-config';
+import { ErrorDisplayComponent } from '../core/error-display.component';
 import { Artist } from '../models/entities';
 import { NO_COVER_SVG } from '../core/no-cover';
-
 @Component({
   selector: 'app-artist-list',
-  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatCardModule, MatIconModule],
+  imports: [RouterLink, MatProgressBarModule, MatListModule, ErrorDisplayComponent],
   styleUrl: './artist-list.component.scss',
   template: `
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+    <app-error-display [error]="errorMsg()" (dismiss)="errorMsg.set('')" />
+
     <div class="list-header">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Search artists</mat-label>
-        <input matInput [(ngModel)]="searchText" />
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-      <span class="count">{{ filtered().length }} artists</span>
+      <div class="page-header-text">
+        <span class="header-icon material-icons">view_list</span> Artists
+        <span class="badge-count">{{ filtered().length }}</span>
+      </div>
+      <hr class="header-rule" />
     </div>
 
-    <div class="artist-grid">
-      @for (artist of filtered(); track artist.Id) {
-        <mat-card class="artist-card" (click)="open(artist)">
-          <img mat-card-image
-               [src]="artist.ImageUrl || noCover"
-               [alt]="artist.ArtistName"
-               (error)="onImgError($event)" />
-          <mat-card-content>
-            <div class="artist-name">{{ artist.ArtistName }}</div>
-            <div class="album-count">{{ artist.AlbumCount }} albums</div>
-          </mat-card-content>
-        </mat-card>
-      }
+    <div class="artist-list-wrap">
+      <mat-nav-list class="artist-list">
+        @for (artist of filtered(); track artist.Id) {
+          <a mat-list-item class="artist-row" [routerLink]="['/artist', artist.Id]" (click)="recordScrollPos()">
+            <span matListItemIcon class="artist-icon material-icons">groups</span>
+            <span class="artist-body">
+              <span class="artist-count">{{ artist.AlbumCount }}</span>
+              <span class="artist-name">{{ artist.ArtistName }}</span>
+            </span>
+            <img matListItemMeta
+                 [src]="artist.ImageUrl || noCover"
+                 [alt]="artist.ArtistName"
+                 class="artist-thumb"
+                 (error)="onImgError($event)" />
+          </a>
+        }
+      </mat-nav-list>
     </div>
   `,
 })
-export class ArtistListComponent implements OnInit {
+export class ArtistListComponent implements OnInit, OnDestroy {
   private artistService = inject(ArtistService);
-  private router = inject(Router);
+  private appConfig = inject(AppConfig);
 
   protected readonly noCover = NO_COVER_SVG;
-  searchText = '';
+  protected loading = signal(true);
+  protected errorMsg = signal('');
   private allArtists = signal<Artist[]>([]);
   protected filtered = computed(() => {
-    const q = this.searchText.toLowerCase();
+    const q = this.appConfig.searchText().toLowerCase();
     if (!q) return this.allArtists();
     return this.allArtists().filter(a => a.ArtistName.toLowerCase().includes(q));
   });
 
   ngOnInit() {
-    this.artistService.getArtists().subscribe(list => this.allArtists.set(list));
+    this.appConfig.isSearchAllowed.set(true);
+    this.appConfig.searchText.set('');
+    this.artistService.getArtists().subscribe({
+      next: list => {
+        this.allArtists.set(list);
+        this.loading.set(false);
+        window.scrollTo({ top: this.artistService.listScrollPos, behavior: 'instant' });
+      },
+      error: err => { this.loading.set(false); this.errorMsg.set(err?.error?.message ?? err?.message ?? 'Failed to load artists'); },
+    });
   }
 
-  open(artist: Artist) {
-    this.router.navigate(['/artist', artist.Id]);
+  ngOnDestroy() {
+    this.appConfig.isSearchAllowed.set(false);
+  }
+
+  recordScrollPos() {
+    this.artistService.listScrollPos = window.scrollY;
   }
 
   onImgError(event: Event) {
@@ -65,3 +85,4 @@ export class ArtistListComponent implements OnInit {
     if (!img.dataset['fallback']) { img.dataset['fallback'] = '1'; img.src = NO_COVER_SVG; }
   }
 }
+

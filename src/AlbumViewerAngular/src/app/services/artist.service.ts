@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { AppConfig } from '../core/app-config';
-import { Artist, ArtistResult } from '../models/entities';
+import { Artist, ArtistResult, ArtistLookupItem } from '../models/entities';
 
 @Injectable({ providedIn: 'root' })
 export class ArtistService {
@@ -54,7 +54,7 @@ export class ArtistService {
   }
 
   lookupArtists(search: string) {
-    return this.http.get<Artist[]>(`${this.config.url('artistLookup')}?search=${encodeURIComponent(search)}`);
+    return this.http.get<ArtistLookupItem[]>(`${this.config.url('artistLookup')}?search=${encodeURIComponent(search)}`);
   }
 
   private updateArtistInList(artist: Artist): void {
@@ -63,3 +63,4 @@ export class ArtistService {
     else this.artistList[idx] = artist;
   }
 }
+

@@ -31,10 +31,52 @@ var webHost = builder.WebHost;
 var environment = builder.Environment;
 
 
-services.AddDbContext<AlbumViewerContext>(builder =>
+services.AddDbContext<AlbumViewerContext>(options =>
 {
+    // Provider selection — set Data:Provider in appsettings.json (or override via environment/user secrets).
+    // The connection string always lives in ConnectionStrings:AlbumViewer.
+    // Legacy keys (Data:useSqLite, Data:SqlServerConnectionString) are still honoured as fallbacks.
+    //
+    // To add a new provider: add the NuGet package, add a case below, done.
+    //   sqlite      — zero-config default; no ConnectionStrings entry needed
+    //   sqlserver   — set ConnectionStrings:AlbumViewer to a SQL Server connection string
+    //   postgresql  — set ConnectionStrings:AlbumViewer to a PostgreSQL connection string
+    //   (any other) — add the EF Core provider package and a case below
+
     var connStr = configuration.GetConnectionString("AlbumViewer");
-    builder.UseNpgsql(connStr);
+    var provider = configuration["Data:Provider"]?.Trim().ToLowerInvariant();
+
+    // Legacy fallback: if Provider key is absent, infer from the old keys
+    if (string.IsNullOrEmpty(provider))
+    {
+        if (!string.IsNullOrEmpty(connStr))
+            provider = "postgresql";
+        else if (configuration["Data:useSqLite"] == "true")
+            provider = "sqlite";
+        else
+            provider = "sqlserver";
+    }
+
+    // Legacy fallback: if Provider is sqlserver but no ConnectionStrings entry, use old key
+    if (provider == "sqlserver" && string.IsNullOrEmpty(connStr))
+        connStr = configuration["Data:SqlServerConnectionString"];
+
+    switch (provider)
+    {
+        case "sqlite":
+            var sqlitePath = Path.Combine(environment.ContentRootPath, "AlbumViewerData.sqlite");
+            options.UseSqlite($"Data Source={sqlitePath}");
+            break;
+        case "sqlserver":
+            options.UseSqlServer(connStr, opt => opt.EnableRetryOnFailure());
+            break;
+        case "postgresql":
+            options.UseNpgsql(connStr);
+            break;
+        default:
+            throw new InvalidOperationException(
+                $"Unknown database provider '{provider}'. Set Data:Provider to sqlite, sqlserver, or postgresql.");
+    }
 });
 
 
@@ -125,6 +167,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddValidation();
 
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 // LiveReload: controlled by LiveReload:LiveReloadEnabled in appsettings.Development.json
 // Set to true when running ng serve alongside the API (Step 3.3)

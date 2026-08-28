@@ -1,64 +1,137 @@
-.artist-layout {
-  padding: 24px;
-  max-width: 960px;
+// font-weight not repeated here — strahl.scss's global h1-h6 rule already covers it
+.artist-name {
+  font-size: var(--av-artist-name-size-h, 2rem);
+  line-height: var(--av-heading-line-height, normal);
+  margin: 0 0 var(--av-artist-name-margin-bottom, 8px);
+}
+
+hr.separator {
+  border: none;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  margin: 0 0 var(--av-separator-margin-bottom, 12px);
+}
+
+.btn-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: var(--av-btn-group-margin-bottom, 12px);
 }
 
 .artist-header {
   display: flex;
   gap: 24px;
-  margin-bottom: 24px;
+  margin-bottom: var(--av-artist-header-margin-bottom, 16px);
 
   .artist-img {
-    width: 160px;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 50%;
+    width: 97%;
+    max-width: 220px;
+    border-radius: var(--av-radius-standard, 4px);
+    margin-bottom: 8px;
     flex-shrink: 0;
+    align-self: flex-start;
   }
 
   .artist-info {
     flex: 1;
-    h1 { margin: 0 0 8px; }
-    p { color: rgba(0, 0, 0, 0.6); margin: 0 0 16px; }
+    .description { color: var(--mat-sys-on-surface-variant); margin: 0 0 12px; line-height: 1.5; }
   }
 
-  .header-actions {
-    display: flex;
-    gap: 8px;
+  .media-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--av-font-size-secondary, 0.875rem);
   }
 }
 
-h2 { margin: 0 0 12px; }
+// font-weight not repeated here — strahl.scss's global h1-h6 rule already covers it
+h3 {
+  font-size: var(--av-h3-size, 1.5rem);
+  line-height: var(--av-heading-line-height, normal);
+  margin: 0 0 var(--av-h3-margin-bottom, 8px);
+}
 
 .album-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 5px;
+  padding: 0 0 24px;
 }
 
-.album-card {
+.album {
+  position: relative;
+  overflow: hidden;
+  padding: 10px;
+  border: 1px solid var(--av-album-tile-border, var(--mat-sys-outline-variant));
+  border-radius: var(--av-radius-card, 6px);
   cursor: pointer;
-  transition: box-shadow 0.2s;
+  box-sizing: border-box;
+  width: calc((100% - 10px) / 3);
+  height: 165px;
 
-  &:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+  @media (max-width: 960px) { width: calc((100% - 5px) / 2); }
+  @media (max-width: 580px) { width: 100%; height: auto; min-height: 120px; }
 
-  img[mat-card-image] {
-    height: 160px;
+  .album-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: none;
+    gap: 4px;
+    padding: 5px;
+    border-radius: var(--av-overlay-radius, 3px);
+
+    a {
+      cursor: pointer;
+      color: var(--av-album-overlay-link, var(--mat-sys-on-surface));
+      &:hover { color: var(--av-album-overlay-link-hover, var(--mat-sys-primary)); }
+    }
+  }
+
+  &:hover .album-overlay { display: flex; }
+
+  .album-body {
+    display: flex;
+    gap: 8px;
+    height: 100%;
+  }
+
+  .album-image {
+    width: 55px;
+    height: 55px;
     object-fit: cover;
+    border-radius: var(--av-album-image-radius, 4px);
+    flex-shrink: 0;
+    align-self: flex-start;
+
+    @media (min-width: 960px) { width: 70px; height: 70px; }
   }
 
-  .album-title {
-    font-size: 0.875rem;
-    font-weight: 500;
-    white-space: nowrap;
+  .album-info {
+    flex: 1;
     overflow: hidden;
-    text-overflow: ellipsis;
+
+    .album-title {
+      line-height: 1.3;
+      color: var(--av-album-title-color, inherit);
+    }
+
+    .album-artist {
+      font-style: italic;
+      line-height: 1.3;
+      color: var(--av-album-artist-color, var(--mat-sys-on-surface-variant));
+    }
+
+    .album-descript {
+      line-height: 1.35;
+      color: var(--mat-sys-on-surface-variant);
+      overflow: hidden;
+    }
   }
 
-  .album-year {
-    font-size: 0.75rem;
-    color: rgba(0, 0, 0, 0.4);
+  &:hover .album-info {
+    .album-descript { color: var(--av-album-hover-descript, inherit); }
   }
 }
 
-.loading { padding: 24px; }
+.add-album-btn { margin-top: 24px; }

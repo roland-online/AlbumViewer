@@ -1,25 +1,36 @@
+hr.separator {
+  border: none;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  margin-top: var(--av-separator-margin-top, 10px);
+  margin-bottom: 0;
+}
+
+.btn-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: var(--av-btn-group-margin-bottom, 12px);
+}
+
 .detail-layout {
   display: flex;
-  gap: 32px;
-  padding: 24px;
-  max-width: 960px;
+  gap: var(--av-detail-layout-gap, 24px);
+  padding: var(--av-detail-layout-padding, 16px 0);
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+  }
 }
 
 .cover-panel {
-  flex-shrink: 0;
+  flex: 0 0 25%;
+  max-width: 25%;
+  min-width: 120px;
 
   .cover-img {
-    width: 240px;
-    height: 240px;
-    object-fit: cover;
-    border-radius: 4px;
+    width: auto;
+    max-width: 95%;
+    border-radius: var(--av-radius-standard, 4px);
     display: block;
-  }
-
-  .cover-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
   }
 }
 
@@ -27,25 +38,83 @@
   flex: 1;
   min-width: 0;
 
-  h1 { margin: 0 0 4px; }
-  h2 { margin: 0 0 12px; font-weight: 400; font-size: 1.1rem; }
-  a { color: inherit; }
+  // font-weight not repeated here — strahl.scss's global h1-h6 rule already covers it
+  .album-title-big {
+    font-size: var(--av-album-title-big-size, 1.55em);
+    line-height: var(--av-heading-line-height, normal);
+    margin: 0 0 var(--av-album-title-big-margin-bottom, 6px);
+  }
+
+  .album-artist {
+    font-size: var(--av-font-size-meta, 0.9em);
+    font-style: italic;
+    margin: 0 0 var(--av-album-artist-margin-bottom, 8px);
+    a { color: var(--av-album-artist-color, var(--mat-sys-primary)); }
+  }
 
   .description {
-    color: rgba(0, 0, 0, 0.6);
-    margin-bottom: 16px;
+    color: var(--mat-sys-on-surface-variant);
+    margin: var(--av-detail-description-margin, 10px 0 16px);
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+    margin: var(--av-more-from-hr-margin, 16px 0 0);
+  }
+
+  .media-links {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin: var(--av-media-links-margin, 0 0 10px);
+  }
+
+  .media-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--av-font-size-secondary, 0.875rem);
   }
 }
 
 .track-list {
-  .track-num {
-    width: 24px;
-    color: rgba(0, 0, 0, 0.4);
-    font-size: 0.8rem;
+  width: 100%;
+  border-collapse: collapse;
+
+  tr { border-top: 1px solid var(--av-track-row-border, var(--mat-sys-outline-variant)); }
+
+  td {
+    padding: 6px 5px;
+    vertical-align: middle;
+    border: none;
   }
+
+  .track-icon {
+    font-size: 1em;
+    vertical-align: middle;
+    line-height: 1;
+  }
+
   .track-len {
-    color: rgba(0, 0, 0, 0.4);
-    font-size: 0.8rem;
+    color: var(--mat-sys-outline);
+    white-space: nowrap;
+    text-align: right;
+    width: 60px;
+  }
+}
+
+.more-from {
+  margin-top: var(--av-more-from-margin-top, 8px);
+  font-size: var(--av-font-size-meta, 0.9em);
+
+  a { text-decoration: none; }
+
+  .artist-thumb {
+    display: block;
+    height: 100px;
+    border-radius: var(--av-radius-standard, 4px);
+    margin-top: 4px;
   }
 }
 
