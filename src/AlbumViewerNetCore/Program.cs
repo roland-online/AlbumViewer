@@ -167,6 +167,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddValidation();
 
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 // LiveReload: controlled by LiveReload:LiveReloadEnabled in appsettings.Development.json
 // Set to true when running ng serve alongside the API (Step 3.3)
