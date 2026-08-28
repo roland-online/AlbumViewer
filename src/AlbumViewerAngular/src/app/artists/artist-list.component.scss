@@ -29,8 +29,11 @@
 }
 
 .artist-row {
+  // mat-list-item's own internal MDC styles set cursor on the list item — confirmed by
+  // testing live (removing !important made the cursor revert to a plain arrow); a plain
+  // class selector doesn't have enough specificity to beat it.
   cursor: pointer !important;
-  border-bottom: 1px solid var(--mat-sys-outline-variant) !important;
+  border-bottom: 1px solid var(--av-list-border, #dee2e6);
 
   .artist-icon {
     color: var(--av-artist-icon-color, var(--mat-sys-primary));

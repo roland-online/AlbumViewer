@@ -97,6 +97,11 @@ h4 { font-size: 1.1em; }
   // Border radius
   --av-radius-card: 6px;
   --av-radius-standard: 4px;
+  --av-overlay-radius: 3px;
+
+  // Bootstrap's default list/table divider grey (same value as --av-track-row-border,
+  // kept as a separate token since that one is scoped to album-detail/-editor specifically)
+  --av-list-border: #dee2e6;
 
   // Artist detail headings / spacing
   --av-artist-name-margin-bottom: 8px;
@@ -369,6 +374,13 @@ mat-toolbar.mat-toolbar {
 }
 
 // ── Artist/Album detail btn-group (C.5, C.3) — blue to match Bootstrap btn-primary btn-sm ──
+//
+// Templates use <span class="material-icons"> inside these buttons instead of <mat-icon>.
+// This is deliberate: mat-icon has its own internal box sizing that doesn't simply inherit
+// the button's line-height, making the exact 30px button height below hard to hit pixel-for-
+// pixel. A plain icon-font span inherits line-height directly. Everywhere else in the app
+// (outside .btn-group) <mat-icon> is used normally — this override is scoped to this one
+// pixel-parity requirement, not a blanket preference against mat-icon.
 
 app-artist-detail .btn-group,
 app-album-detail .btn-group,

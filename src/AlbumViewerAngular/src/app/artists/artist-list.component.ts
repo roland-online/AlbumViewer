@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, OnDestroy, signal, computed } from '@angular/core';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatListModule } from '@angular/material/list';
 import { ArtistService } from '../services/artist.service';
@@ -9,7 +9,7 @@ import { Artist } from '../models/entities';
 import { NO_COVER_SVG } from '../core/no-cover';
 @Component({
   selector: 'app-artist-list',
-  imports: [MatProgressBarModule, MatListModule, ErrorDisplayComponent],
+  imports: [RouterLink, MatProgressBarModule, MatListModule, ErrorDisplayComponent],
   styleUrl: './artist-list.component.scss',
   template: `
     @if (loading()) {
@@ -28,7 +28,7 @@ import { NO_COVER_SVG } from '../core/no-cover';
     <div class="artist-list-wrap">
       <mat-nav-list class="artist-list">
         @for (artist of filtered(); track artist.Id) {
-          <mat-list-item class="artist-row" (click)="open(artist)">
+          <a mat-list-item class="artist-row" [routerLink]="['/artist', artist.Id]" (click)="recordScrollPos()">
             <span matListItemIcon class="artist-icon material-icons">groups</span>
             <span class="artist-body">
               <span class="artist-count">{{ artist.AlbumCount }}</span>
@@ -39,7 +39,7 @@ import { NO_COVER_SVG } from '../core/no-cover';
                  [alt]="artist.ArtistName"
                  class="artist-thumb"
                  (error)="onImgError($event)" />
-          </mat-list-item>
+          </a>
         }
       </mat-nav-list>
     </div>
@@ -47,7 +47,6 @@ import { NO_COVER_SVG } from '../core/no-cover';
 })
 export class ArtistListComponent implements OnInit, OnDestroy {
   private artistService = inject(ArtistService);
-  private router = inject(Router);
   private appConfig = inject(AppConfig);
 
   protected readonly noCover = NO_COVER_SVG;
@@ -77,9 +76,8 @@ export class ArtistListComponent implements OnInit, OnDestroy {
     this.appConfig.isSearchAllowed.set(false);
   }
 
-  open(artist: Artist) {
+  recordScrollPos() {
     this.artistService.listScrollPos = window.scrollY;
-    this.router.navigate(['/artist', artist.Id]);
   }
 
   onImgError(event: Event) {

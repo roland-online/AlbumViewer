@@ -198,6 +198,13 @@ export class AlbumEditorComponent implements OnInit {
   }
 
   selectArtist(item: ArtistLookupItem) {
+    // Mutates the object returned by album() directly rather than using .update() —
+    // consistent with the [(ngModel)] bindings on Title/Year/etc. in the template, which
+    // do the same. Save() reads the current object off the same signal, so this is correct
+    // for submission; the only cost is the editor-preview pane not live-updating on change
+    // (already noted where the preview template is defined), which is an accepted tradeoff,
+    // not a bug — a live preview isn't worth the risk of introducing update() call sites that
+    // fight the two-way-bound inputs elsewhere in this form.
     this.artistName = item.name;
     const a = this.album()!;
     a.ArtistId = item.id;
