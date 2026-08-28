@@ -1,6 +1,6 @@
+// font-weight not repeated here — strahl.scss's global h1-h6 rule already covers it
 .artist-name {
   font-size: var(--av-artist-name-size-h, 2rem);
-  font-weight: 600;
   line-height: var(--av-heading-line-height, normal);
   margin: 0 0 var(--av-artist-name-margin-bottom, 8px);
 }
@@ -44,9 +44,9 @@ hr.separator {
   }
 }
 
+// font-weight not repeated here — strahl.scss's global h1-h6 rule already covers it
 h3 {
   font-size: var(--av-h3-size, 1.5rem);
-  font-weight: 600;
   line-height: var(--av-heading-line-height, normal);
   margin: 0 0 var(--av-h3-margin-bottom, 8px);
 }

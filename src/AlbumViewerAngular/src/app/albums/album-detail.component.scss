@@ -38,9 +38,9 @@ hr.separator {
   flex: 1;
   min-width: 0;
 
+  // font-weight not repeated here — strahl.scss's global h1-h6 rule already covers it
   .album-title-big {
     font-size: var(--av-album-title-big-size, 1.55em);
-    font-weight: 600;
     line-height: var(--av-heading-line-height, normal);
     margin: 0 0 var(--av-album-title-big-margin-bottom, 6px);
   }
