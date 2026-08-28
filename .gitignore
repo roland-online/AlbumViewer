@@ -77,6 +77,8 @@ dist
 src/AlbumViewerAspNet5/project.lock.json
 AlbumViewer.publishsettings
 *.sqlite
+*.sqlite-shm
+*.sqlite-wal
 *.lock.json
 src/AlbumViewerBusiness/project.lock.json
 src/AlbumViewerNetCore/project.lock.json
