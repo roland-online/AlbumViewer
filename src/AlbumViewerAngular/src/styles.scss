@@ -39,10 +39,18 @@ body {
 }
 /* You can add global styles to this file, and also import other style files */
 
-.snack-success .mat-mdc-snack-bar-label { color: #1b5e20; }
-.snack-success { background: #e8f5e9; }
-.snack-error .mat-mdc-snack-bar-label { color: #b71c1c; }
-.snack-error { background: #ffebee; }
+// Material 3 snackbar theming is exposed via these custom properties, not a plain
+// `background`/`color` on the panel class — the actual surface is an inner MDC element.
+.snack-success {
+  --mat-snack-bar-container-color: #e8f5e9;
+  --mat-snack-bar-supporting-text-color: #1b5e20;
+  --mat-snack-bar-button-color: #1b5e20;
+}
+.snack-error {
+  --mat-snack-bar-container-color: #ffebee;
+  --mat-snack-bar-supporting-text-color: #b71c1c;
+  --mat-snack-bar-button-color: #b71c1c;
+}
 
 hr.separator {
   border: none;
