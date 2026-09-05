@@ -64,7 +64,7 @@ public class AlbumViewerFactory : WebApplicationFactory<Program>
                     File.Delete(_sqliteTestPath);
 
                 services.AddDbContext<AlbumViewerContext>(options =>
-                    options.UseSqlite($"Data Source={_sqliteTestPath}"));
+                    options.UseSqlite($"Data Source={_sqliteTestPath};Pooling=False"));
             }
         });
 
